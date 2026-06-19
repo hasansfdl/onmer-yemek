@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Sipariş Alındı – {{ company_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8" data-aos="zoom-in">
+                <div class="auth-card text-center">
+                    <div class="auth-emblem" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;">
+                        <i class="bi bi-check-lg" style="font-size: 38px;"></i>
+                    </div>
+                    <h2 class="mb-3">Ödeme ve Sipariş Onaylandı!</h2>
+                    <p class="text-light-50">
+                        Teşekkür ederiz. Ödemeniz kaydedildi; ekibimiz en kısa sürede
+                        sizinle iletişime geçerek organizasyon detaylarını netleştirecektir.
+                    </p>
+
+                    {% if order %}
+                        <div class="mt-4 p-3 rounded-3" style="background: var(--c-bg-alt); border: 1px solid var(--c-border);">
+                            <small class="text-light-50">Sipariş Numaranız</small>
+                            <h4 class="text-gold mt-1 mb-0">#ONMER-{{ order.id|stringformat:"05d" }}</h4>
+                            {% if order.payment_transaction_ref and order.payment_status == 'paid' %}
+                                <small class="text-light-50 d-block mt-2 mb-0">
+                                    İşlem referansı: <span class="text-white">{{ order.payment_transaction_ref }}</span>
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        {% if order_items %}
+                            <div class="order-summary mt-4 text-start">
+                                <h5 class="mb-3">Seçtiğiniz Yemekler</h5>
+                                <ul class="list-unstyled order-summary-list mb-3">
+                                    {% for item in order_items %}
+                                        <li class="d-flex justify-content-between align-items-center py-2"
+                                            style="border-bottom: 1px dashed var(--c-border);">
+                                            <div>
+                                                <strong>{{ item.dish.name }}</strong>
+                                                <small class="text-light-50 d-block">
+                                                    {{ item.quantity }} kişi × ₺{{ item.unit_price|floatformat:2 }}
+                                                </small>
+                                            </div>
+                                            <span class="text-gold fw-semibold">₺{{ item.line_total|floatformat:2 }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="d-flex justify-content-between align-items-center pt-2"
+                                     style="border-top: 2px solid var(--c-brand);">
+                                    <span class="text-light-50">Tahmini Toplam</span>
+                                    <strong class="text-gold fs-4">₺{{ order_total|floatformat:2 }}</strong>
+                                </div>
+                                <small class="text-light-50 d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Bu rakam ön tahmindir; nihai fiyat ekibimizle birlikte netleştirilecektir.
+                                </small>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'core:home' %}" class="btn btn-gold">
+                            <i class="bi bi-house me-2"></i> Ana Sayfaya Dön
+                        </a>
+                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn btn-outline-gold">
+                            <i class="bi bi-whatsapp me-2"></i> Aramızı Hızlandır
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

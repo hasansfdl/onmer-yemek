@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Sipariş — ödeme onayı</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1d1d20;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f4f6;padding:32px 12px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellspacing="0" cellpadding="0"
+             style="max-width:600px;background:#0b0b0d;border-radius:14px;overflow:hidden;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+        <tr>
+          <td style="padding:28px 32px;background:linear-gradient(135deg,#0b0b0d,#1a1a1f);
+                     border-bottom:2px solid #2563ff;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;
+                              font-weight:700;color:#fff;letter-spacing:1px;">
+                    {{ company_name }}
+                  </div>
+                  <div style="font-size:11px;color:#5e83ff;letter-spacing:3px;
+                              text-transform:uppercase;margin-top:4px;">
+                    Sipariş — ödeme onayı
+                  </div>
+                </td>
+                <td align="right">
+                  <span style="display:inline-block;padding:6px 14px;border-radius:999px;
+                               background:#2563ff;color:#fff;font-size:11px;
+                               font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">
+                    #ONMER-{{ order.id|stringformat:"05d" }}
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;background:#fff;">
+            <p style="margin:0 0 18px;font-size:15px;color:#3a3a40;line-height:1.6;">
+              Web sitesi üzerinden <strong style="color:#0b0b0d;">toplu sipariş</strong> oluşturuldu ve
+              <strong style="color:#2563ff;">ödeme tamamlandı</strong>.
+            </p>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                   style="border-collapse:separate;border-spacing:0;background:#faf9f5;
+                          border:1px solid #e8e8ec;border-radius:10px;margin-bottom:22px;">
+              <tr>
+                <td colspan="2" style="padding:14px 18px;background:#f0f4ff;border-bottom:1px solid #e8e8ec;
+                                       font-size:13px;font-weight:700;color:#0b0b0d;">Ödeme</td>
+              </tr>
+              {% if order.payment_transaction_ref %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">İşlem referansı</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;color:#1d1d20;font-weight:600;">{{ order.payment_transaction_ref }}</td>
+              </tr>
+              {% endif %}
+              {% if order.payment_completed_at %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Ödeme zamanı</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;color:#1d1d20;">{{ order.payment_completed_at|date:"d.m.Y H:i" }}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td style="padding:14px 18px;font-size:13px;color:#777;">Tahmini toplam</td>
+                <td style="padding:14px 18px;font-size:16px;color:#2563ff;font-weight:700;">₺{{ order_total|floatformat:2 }}</td>
+              </tr>
+            </table>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                   style="border-collapse:separate;border-spacing:0;background:#faf9f5;
+                          border:1px solid #e8e8ec;border-radius:10px;margin-bottom:22px;">
+              <tr>
+                <td colspan="2" style="padding:14px 18px;background:#f0f4ff;border-bottom:1px solid #e8e8ec;
+                                       font-size:13px;font-weight:700;color:#0b0b0d;">Müşteri</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Ad Soyad</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;font-weight:600;">{{ order.full_name }}</td>
+              </tr>
+              {% if order.company %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Firma</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">{{ order.company }}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">E-posta</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">
+                  <a href="mailto:{{ order.email }}" style="color:#2563ff;text-decoration:none;font-weight:600;">{{ order.email }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;font-size:13px;color:#777;">Telefon</td>
+                <td style="padding:14px 18px;font-size:14px;">
+                  <a href="tel:{{ order.phone }}" style="color:#2563ff;text-decoration:none;font-weight:600;">{{ order.phone }}</a>
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                   style="border-collapse:separate;border-spacing:0;background:#faf9f5;
+                          border:1px solid #e8e8ec;border-radius:10px;margin-bottom:22px;">
+              <tr>
+                <td colspan="2" style="padding:14px 18px;background:#f0f4ff;border-bottom:1px solid #e8e8ec;
+                                       font-size:13px;font-weight:700;color:#0b0b0d;">Etkinlik</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Tür</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">{{ order.get_organization_type_display }}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Kişi sayısı</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">{{ order.guest_count }}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Tarih</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">{{ order.event_date|date:"d.m.Y" }}</td>
+              </tr>
+              {% if order.event_time %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:13px;color:#777;">Saat</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #e8e8ec;font-size:14px;">{{ order.event_time|time:"H:i" }}</td>
+              </tr>
+              {% endif %}
+              {% if order.event_address %}
+              <tr>
+                <td style="padding:14px 18px;font-size:13px;color:#777;">Adres</td>
+                <td style="padding:14px 18px;font-size:14px;">{{ order.event_address }}</td>
+              </tr>
+              {% endif %}
+            </table>
+
+            <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#0b0b0d;">Seçilen yemekler</p>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                   style="border:1px solid #e8e8ec;border-radius:10px;overflow:hidden;margin-bottom:22px;">
+              {% for item in order_items %}
+              <tr style="background:#fff;">
+                <td style="padding:12px 16px;font-size:14px;border-bottom:1px solid #eee;">{{ item.dish.name }}</td>
+                <td align="right" style="padding:12px 16px;font-size:13px;color:#555;border-bottom:1px solid #eee;">
+                  {{ item.quantity }} × ₺{{ item.unit_price|floatformat:2 }}
+                </td>
+                <td align="right" style="padding:12px 16px;font-size:14px;font-weight:600;border-bottom:1px solid #eee;">
+                  ₺{{ item.line_total|floatformat:2 }}
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+
+            {% if order.notes %}
+            <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#0b0b0d;">Notlar</p>
+            <div style="padding:16px;background:#fff;border:1px solid #e8e8ec;border-radius:10px;
+                        font-size:14px;color:#3a3a40;line-height:1.55;margin-bottom:22px;">
+              {{ order.notes|linebreaksbr }}
+            </div>
+            {% endif %}
+
+            <p style="margin:0;font-size:13px;color:#777;">
+              <a href="{{ admin_url }}" style="color:#2563ff;font-weight:600;">Django Admin’de siparişi aç</a>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:18px 32px;background:#1a1a1f;font-size:11px;color:#888;text-align:center;">
+            {{ site.company_name }} — Bu e-posta otomatik gönderilmiştir.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

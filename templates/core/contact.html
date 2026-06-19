@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}İletişim – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Bize Ulaşın</span>
+        <h1>İletişim</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">İletişim</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up">
+                <div class="contact-info-card">
+                    <div class="ic"><i class="bi bi-telephone"></i></div>
+                    <h6>Telefon</h6>
+                    <p><a href="tel:{{ phone }}">{{ phone }}</a></p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="80">
+                <div class="contact-info-card">
+                    <div class="ic"><i class="bi bi-envelope"></i></div>
+                    <h6>E-posta</h6>
+                    <p><a href="mailto:{{ email }}">{{ email }}</a></p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="160">
+                <div class="contact-info-card">
+                    <div class="ic"><i class="bi bi-whatsapp"></i></div>
+                    <h6>WhatsApp</h6>
+                    <p><a href="https://wa.me/{{ whatsapp }}" target="_blank">Hemen Yaz</a></p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="240">
+                <div class="contact-info-card">
+                    <div class="ic"><i class="bi bi-geo-alt"></i></div>
+                    <h6>Adres</h6>
+                    <p>{{ address }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="form-card">
+                    <h3 class="mb-3">Bize Yazın</h3>
+                    <p class="text-light-50 mb-4">
+                        Sorularınız, teklif talepleriniz veya işbirlikleri için aşağıdaki
+                        formu doldurun. En kısa sürede dönüş yapalım.
+                    </p>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Ad Soyad</label>
+                                {{ form.full_name|add_class:"form-control form-control-lg" }}
+                                {{ form.full_name.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">E-posta</label>
+                                {{ form.email|add_class:"form-control form-control-lg" }}
+                                {{ form.email.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefon</label>
+                                {{ form.phone|add_class:"form-control form-control-lg" }}
+                                {{ form.phone.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Konu</label>
+                                {{ form.subject|add_class:"form-control form-control-lg" }}
+                                {{ form.subject.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Mesaj</label>
+                                {{ form.message|add_class:"form-control" }}
+                                {{ form.message.errors }}
+                            </div>
+                            <div class="col-12 d-grid d-md-flex justify-content-md-end mt-2">
+                                <button type="submit" class="btn btn-gold px-5">
+                                    <i class="bi bi-send-check me-2"></i> Mesaj Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <div class="map-frame h-100">
+                    {% if site.google_maps_embed %}
+                        <iframe src="{{ site.google_maps_embed }}"
+                                style="border:0; height:100%;" allowfullscreen
+                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100 text-light-50 p-5">
+                            <div class="text-center">
+                                <i class="bi bi-geo-alt-fill fs-1 text-gold mb-2"></i>
+                                <p>Harita için site ayarlarından Google Maps URL ekleyin.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

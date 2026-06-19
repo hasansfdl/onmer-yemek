@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Toplu Sipariş – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Online</span>
+        <h1>Toplu Sipariş Talebi</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Toplu Sipariş</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4" data-aos="fade-right">
+                <h2 class="section-title">Etkinliğinize <span class="accent">Özel</span> Teklif</h2>
+                <p class="section-lead">
+                    Detayları paylaşın, deneyimli ekibimiz size özel bir menü ve teklif
+                    hazırlasın. Tüm taleplerimize 24 saat içinde dönüş yapıyoruz.
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="d-flex gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-gold fs-5 mt-1"></i>
+                        <div>
+                            <strong>Hızlı Teklif</strong>
+                            <p class="text-light-50 mb-0 small">Aynı gün içinde detaylı teklif</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-gold fs-5 mt-1"></i>
+                        <div>
+                            <strong>Esnek Menüler</strong>
+                            <p class="text-light-50 mb-0 small">Bütçenize uygun seçenekler</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-2">
+                        <i class="bi bi-check-circle-fill text-gold fs-5 mt-1"></i>
+                        <div>
+                            <strong>Premium Sunum</strong>
+                            <p class="text-light-50 mb-0 small">Tasarım odaklı ekipman ve servis</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="mt-4 p-3 rounded-3" style="border: 1px dashed var(--c-brand); background: rgba(37, 99, 255, .08);">
+                    <small class="text-light-50">Acil mi? Bizi hemen arayın:</small><br>
+                    <a href="tel:{{ phone }}" class="fs-5 text-gold fw-semibold">{{ phone }}</a>
+                </div>
+            </div>
+
+            <div class="col-lg-8" data-aos="fade-left">
+                <div class="form-card">
+                    <h3 class="mb-4">Sipariş Formu</h3>
+                    <form method="post" novalidate id="orderForm">
+                        {% csrf_token %}
+
+                        {# ----- non-field & dish-selection global errors ----- #}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Ad Soyad *</label>
+                                {{ form.full_name }}
+                                {{ form.full_name.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Firma</label>
+                                {{ form.company }}
+                                {{ form.company.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">E-posta *</label>
+                                {{ form.email }}
+                                {{ form.email.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefon *</label>
+                                {{ form.phone }}
+                                {{ form.phone.errors }}
+                            </div>
+
+                            <div class="col-12"><hr class="gold-divider"></div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Organizasyon Türü *</label>
+                                {{ form.organization_type }}
+                                {{ form.organization_type.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kişi Sayısı * <small class="text-light-50">(min. 10)</small></label>
+                                {{ form.guest_count }}
+                                {{ form.guest_count.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Etkinlik Tarihi *</label>
+                                {{ form.event_date }}
+                                {{ form.event_date.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Etkinlik Saati</label>
+                                {{ form.event_time }}
+                                {{ form.event_time.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Etkinlik Adresi</label>
+                                {{ form.event_address }}
+                                {{ form.event_address.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Özel Notlar</label>
+                                {{ form.notes }}
+                                {{ form.notes.errors }}
+                            </div>
+
+                            {# ===================== DISH PICKER ===================== #}
+                            <div class="col-12 mt-2"><hr class="gold-divider"></div>
+
+                            <div class="col-12">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                                    <div>
+                                        <h4 class="mb-1">Yemek Seçimi</h4>
+                                        <small class="text-light-50">İstediğiniz yemekleri seçin ve adet (kişi sayısı) belirleyin. En az bir yemek seçmeniz gerekir.</small>
+                                    </div>
+                                    <div class="dish-picker-total" aria-live="polite">
+                                        <span class="text-light-50 small d-block">Tahmini Toplam</span>
+                                        <strong class="dish-picker-total-amount" data-total>₺0,00</strong>
+                                    </div>
+                                </div>
+
+                                <div class="dish-picker-grid">
+                                    {% for dish in dishes %}
+                                        <article class="dish-pick-card{% if dish.prev_qty %} is-active{% endif %}"
+                                                 data-dish-card
+                                                 data-price="{{ dish.price|stringformat:'f' }}">
+                                            <div class="dish-pick-thumb">
+                                                {% if dish.image %}
+                                                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}" loading="lazy">
+                                                {% else %}
+                                                    <div class="placeholder"><i class="bi bi-egg-fried"></i></div>
+                                                {% endif %}
+                                                {% if dish.is_featured %}
+                                                    <span class="dish-pick-flag"><i class="bi bi-star-fill"></i> Öne Çıkan</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="dish-pick-body">
+                                                <h6 class="mb-1">{{ dish.name }}</h6>
+                                                {% if dish.category %}
+                                                    <small class="text-light-50 d-block mb-1">{{ dish.category.name }}</small>
+                                                {% endif %}
+                                                <p class="dish-pick-desc">{{ dish.description|truncatewords:14 }}</p>
+                                                <div class="dish-pick-foot">
+                                                    <span class="dish-pick-price">₺{{ dish.price|floatformat:2 }} <small>/ kişi</small></span>
+                                                    <div class="qty-control" role="group" aria-label="{{ dish.name }} adet">
+                                                        <button type="button" class="qty-btn qty-minus" data-qty-action="dec" aria-label="Azalt"><i class="bi bi-dash"></i></button>
+                                                        <input type="number"
+                                                               class="qty-input"
+                                                               name="qty_{{ dish.id }}"
+                                                               value="{{ dish.prev_qty|default:0 }}"
+                                                               min="0"
+                                                               step="1"
+                                                               inputmode="numeric"
+                                                               data-qty-input
+                                                               aria-label="{{ dish.name }} adet">
+                                                        <button type="button" class="qty-btn qty-plus" data-qty-action="inc" aria-label="Arttır"><i class="bi bi-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    {% empty %}
+                                        <p class="text-light-50">Şu anda seçim için aktif yemek yok. Lütfen bizi arayın: <a href="tel:{{ phone }}">{{ phone }}</a></p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {# ================== /DISH PICKER ================== #}
+
+                            <div class="col-12 d-grid d-md-flex align-items-md-center justify-content-md-between gap-3 mt-3">
+                                <div class="dish-picker-summary text-light-50 small">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Seçimleriniz teklif aşamasında ekibimizle birlikte netleştirilir.
+                                </div>
+                                <button type="submit" class="btn btn-gold px-5">
+                                    <i class="bi bi-check2-circle me-2"></i> Siparişi Onayla
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ----------------------------------------------------------------
+   Dish picker — qty buttons, active-state styling and live total.
+   Currency: ₺, locale tr-TR.
+   ---------------------------------------------------------------- */
+(function () {
+    const form = document.getElementById('orderForm');
+    if (!form) return;
+
+    const totalEl   = form.querySelector('[data-total]');
+    const cards     = form.querySelectorAll('[data-dish-card]');
+    const fmt       = new Intl.NumberFormat('tr-TR', {
+        style: 'currency', currency: 'TRY', minimumFractionDigits: 2,
+    });
+
+    function recalcTotal() {
+        let total = 0;
+        cards.forEach(card => {
+            const price = parseFloat(card.dataset.price || '0') || 0;
+            const input = card.querySelector('[data-qty-input]');
+            const qty = Math.max(0, parseInt(input.value || '0', 10) || 0);
+            total += price * qty;
+            card.classList.toggle('is-active', qty > 0);
+        });
+        if (totalEl) totalEl.textContent = fmt.format(total);
+    }
+
+    cards.forEach(card => {
+        const input  = card.querySelector('[data-qty-input]');
+        const minus  = card.querySelector('[data-qty-action="dec"]');
+        const plus   = card.querySelector('[data-qty-action="inc"]');
+
+        // Clicking anywhere on the card (except the qty controls) starts a
+        // single-portion selection — nice convenience UX for first click.
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.qty-control')) return;
+            if (e.target.closest('button')) return;
+            const cur = parseInt(input.value || '0', 10) || 0;
+            if (cur === 0) {
+                input.value = 1;
+                recalcTotal();
+            }
+        });
+
+        minus.addEventListener('click', () => {
+            const cur = parseInt(input.value || '0', 10) || 0;
+            input.value = Math.max(0, cur - 1);
+            recalcTotal();
+        });
+        plus.addEventListener('click', () => {
+            const cur = parseInt(input.value || '0', 10) || 0;
+            input.value = cur + 1;
+            recalcTotal();
+        });
+        input.addEventListener('input', () => {
+            const v = parseInt(input.value || '0', 10);
+            if (isNaN(v) || v < 0) input.value = 0;
+            recalcTotal();
+        });
+    });
+
+    recalcTotal();
+})();
+</script>
+{% endblock %}

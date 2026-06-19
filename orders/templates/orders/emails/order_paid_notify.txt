@@ -1,0 +1,76 @@
+{{ company_name|upper }} — SİPARİŞ / ÖDEME ONAYI
+
+==================================================
+
+
+
+Sipariş no     : #ONMER-{{ order.id|stringformat:"05d" }}
+
+Ödeme durumu   : Ödeme alındı
+
+{% if order.payment_transaction_ref %}İşlem ref.    : {{ order.payment_transaction_ref }}
+
+{% endif %}{% if order.payment_completed_at %}Ödeme tarihi   : {{ order.payment_completed_at|date:"d.m.Y H:i" }}
+
+{% endif %}
+
+Müşteri
+
+-------
+
+Ad Soyad       : {{ order.full_name }}
+
+{% if order.company %}Firma          : {{ order.company }}
+
+{% endif %}E-posta        : {{ order.email }}
+
+Telefon        : {{ order.phone }}
+
+
+
+Etkinlik
+
+--------
+
+Tür            : {{ order.get_organization_type_display }}
+
+Kişi sayısı    : {{ order.guest_count }}
+
+Tarih          : {{ order.event_date|date:"d.m.Y" }}
+
+{% if order.event_time %}Saat           : {{ order.event_time|time:"H:i" }}
+
+{% endif %}{% if order.event_address %}Adres          : {{ order.event_address }}
+
+{% endif %}
+
+
+
+Yemekler ve tutar
+
+-----------------
+
+{% for item in order_items %}- {{ item.dish.name }} — {{ item.quantity }} kişi × ₺{{ item.unit_price|floatformat:2 }} = ₺{{ item.line_total|floatformat:2 }}
+
+{% endfor %}
+
+Toplam (tahmini) : ₺{{ order_total|floatformat:2 }}
+
+
+
+{% if order.notes %}Notlar
+
+------
+
+{{ order.notes }}
+
+
+
+{% endif %}Yönetim panelinde aç:
+
+{{ admin_url }}
+
+
+
+Bu siparişe yanıtlamak için müşteri e-postası: {{ order.email }}
+

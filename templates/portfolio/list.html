@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Galeri – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Anılarımız</span>
+        <h1>Galeri</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Galeri</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="filter-chips justify-content-center mb-5" data-aos="fade-up">
+            <a href="?" class="filter-chip {% if active_category == 'all' %}active{% endif %}">
+                <i class="bi bi-grid-fill me-1"></i> Tümü
+            </a>
+            {% for value, label in categories %}
+                <a href="?category={{ value }}"
+                   class="filter-chip {% if active_category == value %}active{% endif %}">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </div>
+
+        {% if items %}
+            <div class="portfolio-grid" data-aos="fade-up">
+                {% for item in items %}
+                    <a class="portfolio-item glightbox" data-gallery="all"
+                       href="{{ item.cover.url }}" data-title="{{ item.title }}"
+                       data-description="{{ item.description|truncatewords:20 }}">
+                        <img src="{{ item.cover.url }}" alt="{{ item.title }}" loading="lazy">
+                        <div class="portfolio-overlay">
+                            <span class="cat">{{ item.get_category_display }}</span>
+                            <h5>{{ item.title }}</h5>
+                            {% if item.location %}<small class="text-light-50">{{ item.location }}</small>{% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="form-card text-center mx-auto" style="max-width: 600px;" data-aos="fade-up">
+                <i class="bi bi-images text-gold display-4"></i>
+                <h4 class="mt-3">Henüz galeri öğesi eklenmemiş.</h4>
+                <p class="text-light-50">Yakında etkileyici organizasyon görsellerimiz burada olacak.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

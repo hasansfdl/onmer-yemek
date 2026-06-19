@@ -1,0 +1,5 @@
+# Onmer Admin Panel — Django projesiyle aynı ortamda çalışır.
+# Kurulum: python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+PyQt6>=6.6.0
+Django>=5.0,<7.0
+psycopg[binary]>=3.2,<4

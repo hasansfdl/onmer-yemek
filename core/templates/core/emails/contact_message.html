@@ -1,0 +1,129 @@
+{% load humanize %}<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Yeni iletişim mesajı</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1d1d20;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f4f6;padding:32px 12px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellspacing="0" cellpadding="0"
+             style="max-width:600px;background:#0b0b0d;border-radius:14px;overflow:hidden;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+
+        <!-- Header -->
+        <tr>
+          <td style="padding:28px 32px;background:linear-gradient(135deg,#0b0b0d,#1a1a1f);
+                     border-bottom:2px solid #d4af37;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;
+                              font-weight:700;color:#fff;letter-spacing:1px;">
+                    {{ company_name }}
+                  </div>
+                  <div style="font-size:11px;color:#d4af37;letter-spacing:3px;
+                              text-transform:uppercase;margin-top:4px;">
+                    Yeni iletişim mesajı
+                  </div>
+                </td>
+                <td align="right">
+                  <span style="display:inline-block;padding:6px 14px;border-radius:999px;
+                               background:#d4af37;color:#0b0b0d;font-size:11px;
+                               font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">
+                    Yeni
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;background:#fff;">
+            <p style="margin:0 0 18px;font-size:15px;color:#3a3a40;line-height:1.6;">
+              <strong style="color:#0b0b0d;">{{ msg.full_name }}</strong>
+              adlı kişi web sitesi üzerinden bir mesaj gönderdi.
+            </p>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                   style="border-collapse:separate;border-spacing:0;background:#faf9f5;
+                          border:1px solid #ece7d3;border-radius:10px;margin-bottom:22px;">
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:13px;color:#777;">Ad Soyad</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:14px;color:#1d1d20;font-weight:600;">{{ msg.full_name }}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:13px;color:#777;">E-posta</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:14px;">
+                  <a href="mailto:{{ msg.email }}" style="color:#a8841d;text-decoration:none;font-weight:600;">{{ msg.email }}</a>
+                </td>
+              </tr>
+              {% if msg.phone %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:13px;color:#777;">Telefon</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:14px;">
+                  <a href="tel:{{ msg.phone }}" style="color:#a8841d;text-decoration:none;font-weight:600;">{{ msg.phone }}</a>
+                </td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:13px;color:#777;">Konu</td>
+                <td style="padding:14px 18px;border-bottom:1px solid #ece7d3;font-size:14px;color:#1d1d20;font-weight:600;">{{ msg.subject }}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;font-size:13px;color:#777;">Tarih</td>
+                <td style="padding:14px 18px;font-size:14px;color:#1d1d20;">
+                  {{ msg.created_at|date:"d.m.Y H:i" }}
+                </td>
+              </tr>
+            </table>
+
+            <div style="font-size:12px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+              Mesaj
+            </div>
+            <div style="background:#fdfbf2;border-left:4px solid #d4af37;padding:18px 20px;
+                        font-size:15px;line-height:1.7;color:#1d1d20;border-radius:6px;
+                        white-space:pre-wrap;">{{ msg.message }}</div>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;">
+              <tr>
+                <td>
+                  <a href="mailto:{{ msg.email }}?subject=Re:%20{{ msg.subject|urlencode }}"
+                     style="display:inline-block;background:linear-gradient(135deg,#d4af37,#a8841d);
+                            color:#0b0b0d;text-decoration:none;padding:13px 24px;
+                            border-radius:999px;font-weight:600;font-size:14px;
+                            letter-spacing:0.5px;">
+                    Müşteriye Yanıtla
+                  </a>
+                  <a href="{{ admin_url }}"
+                     style="display:inline-block;margin-left:8px;color:#3a3a40;
+                            text-decoration:none;padding:13px 22px;border-radius:999px;
+                            border:1px solid #d8d8de;font-weight:600;font-size:14px;">
+                    Yönetim Panelinde Aç
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="padding:18px 32px;background:#0b0b0d;color:#878793;font-size:12px;
+                     text-align:center;letter-spacing:1px;">
+            © {{ company_name }} · Bu mesaj web sitesi iletişim formundan otomatik oluşturuldu.
+          </td>
+        </tr>
+      </table>
+
+      <p style="font-size:11px;color:#9c9ca5;margin-top:14px;text-align:center;">
+        Yanıtla tuşu doğrudan {{ msg.email }} adresine yazar.
+      </p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Lokasyon & Lojistik – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Hizmet Ağımız</span>
+        <h1>Lokasyon & Lojistik</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Lokasyon</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="map-frame">
+                    {% if site.google_maps_embed %}
+                        <iframe src="{{ site.google_maps_embed }}"
+                                style="border:0;" allowfullscreen
+                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    {% else %}
+                        <iframe src="https://www.google.com/maps?q=Kad%C4%B1k%C3%B6y,%20%C4%B0stanbul&output=embed"
+                                style="border:0;" allowfullscreen
+                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <span class="section-eyebrow eyebrow-start">Hizmet Bölgeleri</span>
+                <h2 class="section-title">Türkiye Geneli <span class="accent">Hizmet</span></h2>
+                <p class="section-lead">
+                    Modern araç filomuz ve geniş tedarik ağımızla aşağıdaki bölgelere
+                    eksiksiz catering hizmeti sunuyoruz.
+                </p>
+
+                <div class="mt-4">
+                    {% for area in service_areas %}
+                        <span class="service-area-pill">
+                            <i class="bi bi-geo-alt-fill"></i> {{ area.name }}
+                            {% if area.note %}<small class="text-light-50">· {{ area.note }}</small>{% endif %}
+                        </span>
+                    {% empty %}
+                        <span class="service-area-pill"><i class="bi bi-geo-alt-fill"></i> İstanbul</span>
+                        <span class="service-area-pill"><i class="bi bi-geo-alt-fill"></i> Ankara</span>
+                        <span class="service-area-pill"><i class="bi bi-geo-alt-fill"></i> İzmir</span>
+                        <span class="service-area-pill"><i class="bi bi-geo-alt-fill"></i> Bursa</span>
+                        <span class="service-area-pill"><i class="bi bi-geo-alt-fill"></i> Antalya</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: var(--c-bg-alt);">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Filomuz</span>
+            <h2 class="section-title">Modern <span class="accent">Lojistik</span> Ağı</h2>
+            <p class="section-lead mx-auto">
+                Yemekleriniz tazeliğini koruyarak, soğuk zincire uygun araçlarımızla
+                etkinlik adresinize ulaşır.
+            </p>
+        </div>
+        <div class="row g-4">
+            {% for v in fleet %}
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'80' }}">
+                    <div class="fleet-card">
+                        <div class="fleet-ic"><i class="bi {{ v.icon }}"></i></div>
+                        <h5>{{ v.name }}</h5>
+                        <p class="text-light-50 mb-1"><strong>{{ v.capacity }}</strong></p>
+                        {% if v.description %}<p class="text-light-50 small">{{ v.description }}</p>{% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
+                    <div class="fleet-card">
+                        <div class="fleet-ic"><i class="bi bi-truck"></i></div>
+                        <h5>Soğuk Zincir Aracı</h5>
+                        <p class="text-light-50">500 kişilik servis kapasiteli soğutmalı kasa.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="80">
+                    <div class="fleet-card">
+                        <div class="fleet-ic"><i class="bi bi-truck-flatbed"></i></div>
+                        <h5>Servis Aracı</h5>
+                        <p class="text-light-50">Şehir içi hızlı dağıtım için kompakt servis aracı.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="160">
+                    <div class="fleet-card">
+                        <div class="fleet-ic"><i class="bi bi-bus-front"></i></div>
+                        <h5>Servis Personel Aracı</h5>
+                        <p class="text-light-50">Etkinlik ekibimizi sahaya zamanında ulaştırır.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

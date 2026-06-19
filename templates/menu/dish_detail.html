@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}{{ dish.name }} – {{ company_name }}{% endblock %}
+{% block meta_description %}{{ dish.description|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Yemek Detayı</span>
+        <h1>{{ dish.name }}</h1>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        {% if not dish.is_active %}
+            <div class="alert border mb-4 py-3 px-4 rounded-3"
+                 style="background: rgba(231, 76, 60, 0.12); border-color: rgba(231, 76, 60, 0.45) !important; color: var(--c-text);"
+                 role="alert">
+                <i class="bi bi-pause-circle me-2 text-danger"></i>
+                <strong>Bu yemek şu anda menüde aktif değil.</strong>
+                <span class="text-light-50"> Sitede liste ve öne çıkan alanlarda gösterilmez; dilerseniz menüden başka yemeklere göz atabilirsiniz.</span>
+            </div>
+        {% endif %}
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="dish-image rounded-4 overflow-hidden" style="aspect-ratio: 4/3;">
+                    {% if dish.image %}
+                        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                    {% else %}
+                        <div class="placeholder"><i class="bi bi-egg-fried"></i></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                {% if dish.category %}
+                    <span class="dish-badge mb-3 d-inline-block position-static">
+                        {{ dish.category.name }}
+                    </span>
+                {% endif %}
+                <h2 class="section-title mt-2">{{ dish.name }}</h2>
+                <p class="section-lead">{{ dish.description }}</p>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-6 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="bi bi-tag-fill"></i></div>
+                            <h3 class="stat-value" style="font-size: 1.35rem;">₺{{ dish.price|floatformat:2|intcomma }}</h3>
+                            <div class="stat-label">Kişi başı</div>
+                        </div>
+                    </div>
+                    {% if dish.calories %}
+                        <div class="col-6 col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-fire"></i></div>
+                                <h3 class="stat-value">{{ dish.calories }}</h3>
+                                <div class="stat-label">kcal</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if dish.serving_size %}
+                        <div class="col-6 col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-cup-hot"></i></div>
+                                <h3 class="stat-value" style="font-size: 1.4rem;">{{ dish.serving_size }}</h3>
+                                <div class="stat-label">Porsiyon</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if dish.ingredients %}
+                    <h6 class="text-gold mt-4">İçindekiler</h6>
+                    <p class="text-light-50">{{ dish.ingredients }}</p>
+                {% endif %}
+
+                <div class="d-flex gap-2 flex-wrap mt-4">
+                    {% if dish.is_active %}
+                        <a href="{% url 'orders:create' %}" class="btn btn-gold">
+                            <i class="bi bi-cart-plus me-2"></i> Bu Yemekle Sipariş Oluştur
+                        </a>
+                    {% else %}
+                        <button type="button" class="btn btn-gold" disabled title="Pasif yemekler için sipariş oluşturulamaz">
+                            <i class="bi bi-cart-plus me-2"></i> Bu Yemekle Sipariş Oluştur
+                        </button>
+                    {% endif %}
+                    <a href="{% url 'menu:list' %}" class="btn btn-outline-gold">
+                        <i class="bi bi-arrow-left me-2"></i> Menüye Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if similar %}
+            <div class="mt-5 pt-5">
+                <div class="text-center mb-4" data-aos="fade-up">
+                    <span class="section-eyebrow">Benzer</span>
+                    <h3>Aynı Kategoriden <span class="text-gold">Diğer Lezzetler</span></h3>
+                </div>
+                <div class="row g-4">
+                    {% for d in similar %}
+                        <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'80' }}">
+                            <a href="{{ d.get_absolute_url }}" class="text-decoration-none">
+                        <article class="dish-card dish-card-with-price{% if not d.is_active %} dish-card--inactive{% endif %}">
+                            <div class="dish-image">
+                                {% if d.image %}<img src="{{ d.image.url }}" alt="{{ d.name }}">
+                                {% else %}<div class="placeholder"><i class="bi bi-egg-fried"></i></div>{% endif %}
+                                {% if not d.is_active %}
+                                    <span class="dish-inactive-pill">Şu an aktif değil</span>
+                                {% endif %}
+                                <span class="dish-price-pill">₺{{ d.price|floatformat:2|intcomma }} <small>/ kişi</small></span>
+                            </div>
+                                    <div class="dish-body">
+                                        <h5>{{ d.name }}</h5>
+                                        <p class="dish-desc">{{ d.description|truncatewords:12 }}</p>
+                                    </div>
+                                </article>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

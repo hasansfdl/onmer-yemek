@@ -1,0 +1,86 @@
+{% load static %}
+<footer class="onmer-footer pt-5 pb-3 mt-auto">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-6">
+                <a class="navbar-brand d-inline-flex align-items-center mb-3" href="{% url 'core:home' %}">
+                    <img src="{% static 'images/onmer-logo-transparent.png' %}" alt="{{ company_name }}"
+                         class="brand-logo brand-logo-footer" width="200" height="64">
+                </a>
+                <div class="brand-tag d-block mb-3">YEMEK ORGANİZASYON</div>
+                <p class="text-light-50 mb-3">
+                    {{ tagline }}. Premium catering deneyiminde lezzeti, sunumu ve
+                    titizliği bir araya getiriyoruz.
+                </p>
+                <div class="footer-social">
+                    {% if social.instagram %}
+                        <a href="{{ social.instagram }}" aria-label="Instagram" target="_blank" rel="noopener">
+                            <i class="bi bi-instagram"></i></a>
+                    {% endif %}
+                    {% if social.facebook %}
+                        <a href="{{ social.facebook }}" aria-label="Facebook" target="_blank" rel="noopener">
+                            <i class="bi bi-facebook"></i></a>
+                    {% endif %}
+                    {% if social.twitter %}
+                        <a href="{{ social.twitter }}" aria-label="Twitter / X" target="_blank" rel="noopener">
+                            <i class="bi bi-twitter-x"></i></a>
+                    {% endif %}
+                    {% if social.youtube %}
+                        <a href="{{ social.youtube }}" aria-label="YouTube" target="_blank" rel="noopener">
+                            <i class="bi bi-youtube"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h6 class="footer-heading">Kurumsal</h6>
+                <ul class="list-unstyled footer-links">
+                    <li><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                    <li><a href="{% url 'core:about' %}">Hakkımızda</a></li>
+                    <li><a href="{% url 'core:contact' %}">İletişim</a></li>
+                    <li><a href="{% url 'core:location' %}">Lokasyon</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h6 class="footer-heading">Hizmetler</h6>
+                <ul class="list-unstyled footer-links">
+                    <li><a href="{% url 'menu:list' %}">Menü</a></li>
+                    <li><a href="{% url 'orders:create' %}">Toplu Sipariş</a></li>
+                    <li><a href="{% url 'portfolio:list' %}">Galeri</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h6 class="footer-heading">İletişim</h6>
+                <ul class="list-unstyled footer-contact">
+                    <li>
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>{{ address }}</span>
+                    </li>
+                    <li>
+                        <i class="bi bi-telephone-fill"></i>
+                        <a href="tel:{{ phone }}">{{ phone }}</a>
+                    </li>
+                    <li>
+                        <i class="bi bi-envelope-fill"></i>
+                        <a href="mailto:{{ email }}">{{ email }}</a>
+                    </li>
+                    <li>
+                        <i class="bi bi-whatsapp"></i>
+                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" rel="noopener">
+                            WhatsApp Destek Hattı
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center text-light-50 small">
+            <span>© {% now "Y" %} {{ company_name }}. Tüm hakları saklıdır.</span>
+            <span>Premium catering deneyimi · Made with <span class="text-gold">★</span></span>
+        </div>
+    </div>
+</footer>

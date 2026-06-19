@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Randevu Oluştur – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Görüşelim</span>
+        <h1>Randevu Oluştur</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Randevu</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                <h2 class="section-title">Size <span class="accent">Özel</span> Zaman</h2>
+                <p class="section-lead">
+                    Etkinliğinizi planlamak için yüz yüze görüşelim. Aynı saat
+                    diliminde başka bir randevu kabul etmiyoruz; bütün dikkatimiz size.
+                </p>
+
+                <ul class="list-unstyled mt-4">
+                    <li class="d-flex gap-3 mb-3">
+                        <i class="bi bi-calendar-check-fill text-gold fs-4"></i>
+                        <div>
+                            <strong>Esnek Zaman</strong>
+                            <p class="text-light-50 mb-0 small">Hafta içi 09:00–18:00 arası dilediğiniz saat.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-3 mb-3">
+                        <i class="bi bi-shield-lock-fill text-gold fs-4"></i>
+                        <div>
+                            <strong>Çift Rezervasyon Engeli</strong>
+                            <p class="text-light-50 mb-0 small">Aynı saate iki müşteri aynı anda randevu alamaz.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-3">
+                        <i class="bi bi-cup-hot-fill text-gold fs-4"></i>
+                        <div>
+                            <strong>Tadım Daveti</strong>
+                            <p class="text-light-50 mb-0 small">Görüşme sırasında imza lezzetlerimizden tadım.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="form-card">
+                    <h3 class="mb-4">Randevu Formu</h3>
+                    <form method="post" novalidate
+                          data-slots-url="{% url 'reservations:available_slots' %}">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Ad Soyad *</label>
+                                {{ form.full_name }}
+                                {{ form.full_name.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefon *</label>
+                                {{ form.phone }}
+                                {{ form.phone.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">E-posta *</label>
+                                {{ form.email }}
+                                {{ form.email.errors }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tarih *</label>
+                                {{ form.date }}
+                                {{ form.date.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Saat *</label>
+                                {{ form.time }}
+                                {{ form.time.errors }}
+                                <small class="form-text">Dolu saatler otomatik olarak işaretlenir.</small>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Görüşme Konusu</label>
+                                {{ form.topic }}
+                                {{ form.topic.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notlar</label>
+                                {{ form.note }}
+                                {{ form.note.errors }}
+                            </div>
+
+                            <div class="col-12 d-grid d-md-flex justify-content-md-end mt-2">
+                                <button type="submit" class="btn btn-gold px-5">
+                                    <i class="bi bi-calendar-check me-2"></i> Randevu Talep Et
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{{ company_name|upper }} — YENİ İLETİŞİM MESAJI
+====================================================
+
+Gönderen        : {{ msg.full_name }}
+E-posta         : {{ msg.email }}
+{% if msg.phone %}Telefon         : {{ msg.phone }}
+{% endif %}Konu            : {{ msg.subject }}
+Gönderim tarihi : {{ msg.created_at|date:"d.m.Y H:i" }}
+
+----------------------------------------------------
+MESAJ
+----------------------------------------------------
+{{ msg.message }}
+
+----------------------------------------------------
+Bu mesaja "Yanıtla" tuşuyla doğrudan müşteriye dönüş yapabilirsiniz
+({{ msg.email }}).
+
+Yönetim panelinde aç:
+{{ admin_url }}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.title }} – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">{{ item.get_category_display }}</span>
+        <h1>{{ item.title }}</h1>
+        {% if item.event_date or item.location %}
+            <p class="text-light-50 mb-0 mt-2">
+                {% if item.event_date %}<i class="bi bi-calendar2-event me-1"></i> {{ item.event_date|date:"d M Y" }}{% endif %}
+                {% if item.location %} <span class="mx-2">·</span> <i class="bi bi-geo-alt me-1"></i> {{ item.location }}{% endif %}
+            </p>
+        {% endif %}
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4 mb-4" data-aos="fade-up">
+            <div class="col-12">
+                <a class="glightbox" data-gallery="detail" href="{{ item.cover.url }}">
+                    <img src="{{ item.cover.url }}" class="img-fluid w-100 rounded-4" alt="{{ item.title }}"
+                         style="max-height: 600px; object-fit: cover;">
+                </a>
+            </div>
+        </div>
+
+        {% if item.description %}
+            <div class="row mb-5" data-aos="fade-up">
+                <div class="col-lg-9 mx-auto">
+                    <p class="section-lead text-center">{{ item.description }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if item.images.all %}
+            <div class="portfolio-grid">
+                {% for img in item.images.all %}
+                    <a class="portfolio-item glightbox" data-gallery="detail"
+                       href="{{ img.image.url }}" data-title="{{ img.caption|default:item.title }}">
+                        <img src="{{ img.image.url }}" alt="{{ img.caption|default:item.title }}" loading="lazy">
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="text-center mt-5">
+            <a href="{% url 'portfolio:list' %}" class="btn btn-outline-gold">
+                <i class="bi bi-arrow-left me-2"></i> Tüm Galeri
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

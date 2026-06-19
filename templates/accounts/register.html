@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Kayıt Ol – {{ company_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-5" data-aos="fade-up">
+                <div class="auth-card">
+                    <div class="auth-emblem auth-emblem-logo">
+                        <img src="{% static 'images/onmer-mark.png' %}" alt="Onmer">
+                    </div>
+                    <h2 class="text-center mb-2">Hesap Oluştur</h2>
+                    <p class="text-center text-light-50 mb-4">Onmer ailesine katılın.</p>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Kullanıcı Adı</label>
+                            {{ form.username }}
+                            {{ form.username.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">E-posta</label>
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Şifre</label>
+                            {{ form.password1 }}
+                            {{ form.password1.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Şifre (tekrar)</label>
+                            {{ form.password2 }}
+                            {{ form.password2.errors }}
+                        </div>
+                        <button type="submit" class="btn btn-gold w-100">
+                            <i class="bi bi-person-plus me-2"></i> Kayıt Ol
+                        </button>
+                    </form>
+
+                    <div class="divider-fancy">veya</div>
+
+                    <p class="text-center text-light-50 mb-0">
+                        Zaten hesabınız var mı?
+                        <a href="{% url 'accounts:login' %}" class="text-gold">Giriş Yapın</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

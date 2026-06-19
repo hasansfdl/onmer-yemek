@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Sayfa bulunamadı – {{ company_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="container text-center" data-aos="fade-up">
+        <h1 class="display-1 text-gold">404</h1>
+        <h2 class="mb-3">Aradığınız sayfa bulunamadı</h2>
+        <p class="text-light-50 mb-4">Sayfa kaldırılmış ya da hiç var olmamış olabilir.</p>
+        <a href="{% url 'core:home' %}" class="btn btn-gold">
+            <i class="bi bi-arrow-left me-2"></i> Ana Sayfaya Dön
+        </a>
+    </div>
+</section>
+{% endblock %}

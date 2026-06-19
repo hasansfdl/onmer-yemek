@@ -1,0 +1,44 @@
+# Gizli ayarlar
+onmer_database.env
+.env
+.env.*
+
+# Yedekler (veritabanı dump — hassas olabilir)
+backup.json
+backup_utf8.json
+
+# Kısayollar
+*.lnk
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Django
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# Derleme / kurulum
+dist/
+build/
+*.spec.bak
+*.exe
+
+# IDE
+.idea/
+.vscode/
+.cursor/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

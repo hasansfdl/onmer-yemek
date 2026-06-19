@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Hakkımızda – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Kim Olduğumuz?</span>
+        <h1>Hakkımızda</h1>
+        <nav class="d-flex justify-content-center mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Hakkımızda</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=900&q=80"
+                     class="img-fluid rounded-4 shadow-lg" alt="Onmer Mutfak">
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <span class="section-eyebrow eyebrow-start">Hikâyemiz</span>
+                <h2 class="section-title">Lezzetin <span class="accent">Sanatkârları</span></h2>
+                <p class="section-lead">
+                    {{ site.about_long|default:"20 yılı aşkın tecrübemizle düğünlerden kurumsal organizasyonlara, toplu yemek servislerinden özel davetlere kadar her boyuttaki etkinlik için kusursuz lezzetler hazırlıyoruz." }}
+                </p>
+                <hr class="gold-divider mt-4">
+                <p class="text-light-50">
+                    Onmer Yemek, kurulduğu günden bu yana lezzetin yanında, hijyen, sunum
+                    ve müşteri memnuniyetini birinci öncelik olarak benimsemiştir.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: var(--c-bg-alt);">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6" data-aos="fade-up">
+                <div class="feature-card h-100">
+                    <div class="feature-icon"><i class="bi bi-bullseye"></i></div>
+                    <h4>Misyonumuz</h4>
+                    <p>{{ site.mission|default:"Misafirlerimize yalnızca yemek değil, unutulmaz bir deneyim sunmak; hijyen, lezzet ve sunum standartlarımızı her organizasyonda en üst seviyede tutmaktır." }}</p>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card h-100">
+                    <div class="feature-icon"><i class="bi bi-binoculars"></i></div>
+                    <h4>Vizyonumuz</h4>
+                    <p>{{ site.vision|default:"Türkiye’nin en güvenilir premium catering markası olmak ve sektöre kalite çıtasını yükselten bir referans kazandırmak." }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if statistics %}
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Rakamlarla</span>
+            <h2 class="section-title">Onmer'in <span class="accent">Başarıları</span></h2>
+        </div>
+        <div class="row g-4">
+            {% for s in statistics %}
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'100' }}">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi {{ s.icon }}"></i></div>
+                        <h3 class="stat-value">
+                            {{ s.value|intcomma }}{{ s.suffix }}
+                        </h3>
+                        <div class="stat-label">{{ s.label }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if services %}
+<section class="section" style="background: var(--c-bg-alt);">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Hizmetler</span>
+            <h2 class="section-title">Sunduğumuz <span class="accent">Çözümler</span></h2>
+        </div>
+        <div class="row g-4">
+            {% for service in services %}
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'80' }}">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon"><i class="bi {{ service.icon }}"></i></div>
+                        <h4>{{ service.title }}</h4>
+                        <p>{{ service.short_description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

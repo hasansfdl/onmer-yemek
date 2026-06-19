@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Menü – {{ company_name }}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Fiyatlı liste</span>
+        <h1>Menü</h1>
+        <p class="text-light-50 text-center mb-0 mx-auto" style="max-width: 640px;">
+            Mutfağımızdaki tüm yemekler ve güncel kişi başı fiyatlar.
+            <strong class="text-white">Şu an aktif değil</strong> etiketi olanlar menüde görünür ancak toplu siparişe kapalıdır; detay sayfasında bilgi mesajı yer alır.
+            Sipariş için iletişime geçebilir veya aktif yemeklerle toplu sipariş oluşturabilirsiniz.
+        </p>
+        <nav class="d-flex justify-content-center mt-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Ana Sayfa</a></li>
+                <li class="breadcrumb-item active">Menü</li>
+            </ol>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" data-aos="fade-up">
+            <a href="{% url 'orders:create' %}" class="btn btn-gold">
+                <i class="bi bi-cart-plus me-2"></i> Toplu Sipariş Ver
+            </a>
+        </div>
+
+        <div class="filter-chips justify-content-center mb-5" data-aos="fade-up">
+            <a href="?" class="filter-chip {% if active_category == 'all' %}active{% endif %}">
+                <i class="bi bi-grid-fill me-1"></i> Tümü
+            </a>
+            {% for c in categories %}
+                <a href="?category={{ c.slug }}"
+                   class="filter-chip {% if active_category == c.slug %}active{% endif %}">
+                    <i class="bi {{ c.icon }} me-1"></i> {{ c.name }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4">
+            {% for dish in dishes %}
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'60' }}">
+                    <a href="{{ dish.get_absolute_url }}" class="text-decoration-none">
+                        <article class="dish-card dish-card-with-price{% if not dish.is_active %} dish-card--inactive{% endif %}">
+                            <div class="dish-image">
+                                {% if dish.image %}
+                                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="placeholder"><i class="bi bi-egg-fried"></i></div>
+                                {% endif %}
+                                {% if not dish.is_active %}
+                                    <span class="dish-inactive-pill">Şu an aktif değil</span>
+                                {% endif %}
+                                {% if dish.category %}
+                                    <span class="dish-badge">{{ dish.category.name }}</span>
+                                {% endif %}
+                                <span class="dish-price-pill">₺{{ dish.price|floatformat:2|intcomma }} <small>/ kişi</small></span>
+                                {% if dish.calories %}
+                                    <span class="dish-cal">{{ dish.calories }} kcal</span>
+                                {% endif %}
+                            </div>
+                            <div class="dish-body">
+                                <h5>{{ dish.name }}</h5>
+                                <p class="dish-desc">{{ dish.description|truncatewords:20 }}</p>
+                                <div class="dish-meta">
+                                    {% if dish.serving_size %}
+                                        <span><i class="bi bi-cup-hot"></i> {{ dish.serving_size }}</span>
+                                    {% endif %}
+                                    {% if dish.ingredients %}
+                                        <span><i class="bi bi-basket"></i> {{ dish.ingredients|truncatewords:5 }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <div class="form-card mx-auto" style="max-width: 540px;">
+                        <i class="bi bi-egg-fried text-gold display-4"></i>
+                        <h4 class="mt-3">Henüz listelenecek yemek yok.</h4>
+                        <p class="text-light-50">Admin panelinden yemek ekleyip fiyat belirleyebilirsiniz.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Sayfalama" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link bg-onmer-card text-light border-0"
+                               href="?{% if active_category and active_category != 'all' %}category={{ active_category }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                                «
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <span class="page-link border-0 text-white" style="background: var(--c-brand);">
+                            {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link bg-onmer-card text-light border-0"
+                               href="?{% if active_category and active_category != 'all' %}category={{ active_category }}&{% endif %}page={{ page_obj.next_page_number }}">
+                                »
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

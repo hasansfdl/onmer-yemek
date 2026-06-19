@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}{{ company_name }} – Premium Catering & Toplu Yemek{% endblock %}
+
+{% block content %}
+{# ==================== HERO ==================== #}
+<section class="hero" id="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9" data-aos="fade-up">
+                <h1 class="hero-title">
+                    {{ site.hero_title|default:"Lezzeti Sanata Dönüştürüyoruz" }}
+                    <br><span class="gold">{{ company_name|default:"Onmer Yemek" }}</span>
+                </h1>
+                <p class="hero-sub">
+                    {{ site.hero_subtitle|default:tagline }}
+                </p>
+                <div class="hero-cta">
+                    <a href="{% url 'menu:list' %}" class="btn btn-gold">
+                        <i class="bi bi-egg-fried me-2"></i> Yemekleri Keşfet
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#services" class="hero-scroll-down" aria-label="Aşağı kaydır">
+        Keşfet
+    </a>
+</section>
+
+{# ==================== SERVICES ==================== #}
+<section class="section" id="services" style="background: var(--c-bg-alt);">
+    <div class="container">
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-7" data-aos="fade-right">
+                <span class="section-eyebrow eyebrow-start">Hizmetlerimiz</span>
+                <h2 class="section-title">Her Organizasyona <span class="accent">Özel</span> Lezzet</h2>
+                <p class="section-lead">
+                    Düğünlerden kurumsal etkinliklere, toplu yemek servisinden özel davetlere
+                    kadar her boyuttaki organizasyon için kusursuz çözümler sunuyoruz.
+                </p>
+            </div>
+            <div class="col-lg-5 text-lg-end" data-aos="fade-left">
+                <a href="{% url 'menu:list' %}" class="btn btn-outline-gold">
+                    Menüyü Gör <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for service in services %}
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'100' }}">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi {{ service.icon }}"></i>
+                        </div>
+                        <h4>{{ service.title }}</h4>
+                        <p>{{ service.short_description }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                {# Fallback if no services have been seeded yet #}
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="bi bi-heart-fill"></i></div>
+                        <h4>Düğün Organizasyonları</h4>
+                        <p>Hayalinizdeki düğün için özenle hazırlanmış menüler ve kusursuz sunum.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="bi bi-building"></i></div>
+                        <h4>Kurumsal Catering</h4>
+                        <p>Profesyonel iş yemekleri, açılış kokteylleri ve özel kurumsal davetler.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="bi bi-people-fill"></i></div>
+                        <h4>Toplu Yemek</h4>
+                        <p>Fabrika, ofis ve okul kafeteryaları için hijyenik, lezzetli toplu yemek hizmetleri.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ==================== ABOUT TEASER ==================== #}
+<section class="section" id="about-teaser">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="position-relative">
+                    <img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=900&q=80"
+                         class="img-fluid rounded-4 shadow-lg" alt="Onmer Catering">
+                    <div class="position-absolute"
+                         style="bottom: -28px; right: -28px; background: linear-gradient(135deg, var(--c-brand), var(--c-brand-deep));
+                                color: #fff; padding: 22px 28px; border-radius: 14px;
+                                box-shadow: var(--shadow-brand);">
+                        <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 800; line-height: 1;">20+</div>
+                        <div style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">Yıllık Deneyim</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <span class="section-eyebrow eyebrow-start">Hakkımızda</span>
+                <h2 class="section-title">Lezzetin <span class="accent">Mükemmel</span> Adresi</h2>
+                <p class="section-lead">
+                    {{ site.about_short|default:"Onmer Yemek Organizasyon, lezzeti sanatla buluşturan premium bir catering markasıdır. 20 yılı aşkın tecrübemizle ulusal ve uluslararası organizasyonlarda fark yaratıyoruz." }}
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="d-flex gap-3 mb-3">
+                        <i class="bi bi-patch-check-fill text-gold fs-4"></i>
+                        <div>
+                            <strong>Hijyenik Mutfak</strong>
+                            <p class="text-light-50 mb-0">ISO sertifikalı mutfaklar ve gıda güvenliği kontrolü.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-3 mb-3">
+                        <i class="bi bi-stars text-gold fs-4"></i>
+                        <div>
+                            <strong>Şef Kontrolünde Menüler</strong>
+                            <p class="text-light-50 mb-0">Deneyimli şeflerimiz tarafından özenle hazırlanan menüler.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-3">
+                        <i class="bi bi-truck text-gold fs-4"></i>
+                        <div>
+                            <strong>Zamanında Teslimat</strong>
+                            <p class="text-light-50 mb-0">Modern araç filomuzla kesintisiz lojistik desteği.</p>
+                        </div>
+                    </li>
+                </ul>
+                <a href="{% url 'core:about' %}" class="btn btn-gold mt-3">
+                    Daha Fazla Bilgi <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ==================== FEATURED DISHES ==================== #}
+<section class="section" style="background: var(--c-bg-alt);">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Menü</span>
+            <h2 class="section-title">Öne Çıkan <span class="accent">Lezzetler</span></h2>
+            <p class="section-lead mx-auto">Mutfağımızın imza yemeklerinden bir seçki.</p>
+        </div>
+
+        {% if categories %}
+            <div class="filter-chips justify-content-center mb-5" data-aos="fade-up">
+                <a href="{% url 'menu:list' %}" class="filter-chip active">Tümü</a>
+                {% for c in categories %}
+                    <a href="{% url 'menu:list' %}?category={{ c.slug }}" class="filter-chip">
+                        <i class="bi {{ c.icon }} me-1"></i> {{ c.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="row g-4">
+            {% for dish in featured_dishes %}
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'100' }}">
+                    <a href="{{ dish.get_absolute_url }}" class="text-decoration-none">
+                        <article class="dish-card dish-card-with-price{% if not dish.is_active %} dish-card--inactive{% endif %}">
+                            <div class="dish-image">
+                                {% if dish.image %}
+                                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                                {% else %}
+                                    <div class="placeholder"><i class="bi bi-egg-fried"></i></div>
+                                {% endif %}
+                                {% if not dish.is_active %}
+                                    <span class="dish-inactive-pill">Şu an aktif değil</span>
+                                {% endif %}
+                                {% if dish.category %}
+                                    <span class="dish-badge">{{ dish.category.name }}</span>
+                                {% endif %}
+                                <span class="dish-price-pill">₺{{ dish.price|floatformat:2|intcomma }} <small>/ kişi</small></span>
+                                {% if dish.calories %}
+                                    <span class="dish-cal">{{ dish.calories }} kcal</span>
+                                {% endif %}
+                            </div>
+                            <div class="dish-body">
+                                <h5>{{ dish.name }}</h5>
+                                <p class="dish-desc">{{ dish.description|truncatewords:18 }}</p>
+                                {% if dish.serving_size or dish.ingredients %}
+                                    <div class="dish-meta">
+                                        {% if dish.serving_size %}
+                                            <span><i class="bi bi-cup-hot"></i> {{ dish.serving_size }}</span>
+                                        {% endif %}
+                                        {% if dish.ingredients %}
+                                            <span><i class="bi bi-basket"></i> {{ dish.ingredients|truncatewords:6 }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-light-50">Henüz öne çıkan yemek eklenmedi. Admin panelinden ekleyebilirsiniz.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'menu:list' %}" class="btn btn-outline-gold">
+                Tüm Yemekler <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+{# ==================== GALLERY TEASER ==================== #}
+{% if gallery_preview %}
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Galeri</span>
+            <h2 class="section-title">Anılarımıza <span class="accent">Davetlisiniz</span></h2>
+            <p class="section-lead mx-auto">Yapılmış organizasyonlardan kareler.</p>
+        </div>
+
+        <div class="portfolio-grid" data-aos="fade-up">
+            {% for item in gallery_preview %}
+                <a class="portfolio-item glightbox" data-gallery="home" href="{{ item.cover.url }}"
+                   data-title="{{ item.title }}">
+                    <img src="{{ item.cover.url }}" alt="{{ item.title }}" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="cat">{{ item.get_category_display }}</span>
+                        <h5>{{ item.title }}</h5>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'portfolio:list' %}" class="btn btn-outline-gold">
+                Tüm Galeri <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
