@@ -80,4 +80,9 @@ def _apply_database_url(url: str) -> None:
 
 
 def bootstrap() -> None:
+    """Yerel .env dosyası + Render/Vercel gibi ortamlardaki DATABASE_URL."""
     load_env_file()
+    if not os.environ.get("POSTGRES_HOST", "").strip():
+        db_url = os.environ.get("DATABASE_URL", "").strip()
+        if db_url:
+            _apply_database_url(db_url)
