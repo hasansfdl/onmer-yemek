@@ -17,5 +17,3 @@ bootstrap()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'onmer.settings')
 
 application = get_wsgi_application()
-
-application = get_wsgi_application()
