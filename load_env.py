@@ -39,9 +39,7 @@ def load_env_file(path: Path | None = None) -> None:
         key = key.strip()
         if not key:
             continue
-        value = value.strip()
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
-            value = value[1:-1]
+        value = _clean_env_value(value)
         os.environ[key] = value
         set_keys.append(key)
         if key.upper() == "USE_SQLITE":
@@ -50,29 +48,37 @@ def load_env_file(path: Path | None = None) -> None:
     if any(k.upper().startswith("POSTGRES_") for k in set_keys) and not saw_use_sqlite_key:
         os.environ.pop("USE_SQLITE", None)
 
-    db_url = os.environ.get("DATABASE_URL", "").strip()
+    db_url = _clean_env_value(os.environ.get("DATABASE_URL", ""))
     if db_url and not any(k.upper().startswith("POSTGRES_") for k in set_keys):
         _apply_database_url(db_url)
 
 
+def _clean_env_value(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+        value = value[1:-1]
+    return value.strip()
+
+
 def _apply_database_url(url: str) -> None:
     """postgresql://… bağlantı dizesini POSTGRES_* değişkenlerine çevirir."""
-    from urllib.parse import parse_qs, urlparse
+    from urllib.parse import parse_qs, urlparse, unquote
 
+    url = _clean_env_value(url)
     parsed = urlparse(url)
     if parsed.scheme not in ("postgresql", "postgres"):
         return
     if parsed.username:
-        os.environ["POSTGRES_USER"] = parsed.username
-    if parsed.password:
-        os.environ["POSTGRES_PASSWORD"] = parsed.password
+        os.environ["POSTGRES_USER"] = unquote(parsed.username)
+    if parsed.password is not None:
+        os.environ["POSTGRES_PASSWORD"] = unquote(parsed.password)
     if parsed.hostname:
         os.environ["POSTGRES_HOST"] = parsed.hostname
     if parsed.port:
         os.environ["POSTGRES_PORT"] = str(parsed.port)
     db_name = (parsed.path or "").lstrip("/")
     if db_name:
-        os.environ["POSTGRES_DB"] = db_name
+        os.environ["POSTGRES_DB"] = unquote(db_name)
     qs = parse_qs(parsed.query)
     if "sslmode" in qs and qs["sslmode"]:
         os.environ["POSTGRES_SSLMODE"] = qs["sslmode"][0]
@@ -83,6 +89,6 @@ def bootstrap() -> None:
     """Yerel .env dosyası + Render/Vercel gibi ortamlardaki DATABASE_URL."""
     load_env_file()
     if not os.environ.get("POSTGRES_HOST", "").strip():
-        db_url = os.environ.get("DATABASE_URL", "").strip()
+        db_url = _clean_env_value(os.environ.get("DATABASE_URL", ""))
         if db_url:
             _apply_database_url(db_url)
