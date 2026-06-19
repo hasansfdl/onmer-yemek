@@ -8,6 +8,13 @@ from pathlib import Path
 import os
 import sys
 
+try:
+    from load_env import bootstrap as _load_project_env
+
+    _load_project_env()
+except ImportError:
+    pass
+
 
 def _frozen_app() -> bool:
     return getattr(sys, "frozen", False)
@@ -171,6 +178,11 @@ if USE_SQLITE:
         }
     }
 else:
+    _pg_options: dict = {'connect_timeout': 10}
+    _sslmode = os.environ.get('POSTGRES_SSLMODE', '').strip()
+    if _sslmode:
+        _pg_options['sslmode'] = _sslmode
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -180,9 +192,7 @@ else:
             'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
             'PORT': os.environ.get('POSTGRES_PORT', '5432'),
             'CONN_MAX_AGE': 60,
-            'OPTIONS': {
-                'connect_timeout': 10,
-            },
+            'OPTIONS': _pg_options,
         }
     }
 

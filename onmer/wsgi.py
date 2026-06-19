@@ -11,6 +11,11 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from load_env import bootstrap
+
+bootstrap()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'onmer.settings')
+
+application = get_wsgi_application()
 
 application = get_wsgi_application()
