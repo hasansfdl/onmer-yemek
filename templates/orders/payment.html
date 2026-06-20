@@ -116,7 +116,7 @@
   }
   if (num) {
     num.addEventListener('input', function () {
-      var d = num.value.replace(/\D/g, '').slice(0, 19);
+      var d = num.value.replace(/\D/g, '').slice(0, 16);
       num.value = d.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
     });
   }
@@ -132,7 +132,7 @@
   }
   if (cvv) {
     cvv.addEventListener('input', function () {
-      cvv.value = cvv.value.replace(/\D/g, '').slice(0, 4);
+      cvv.value = cvv.value.replace(/\D/g, '').slice(0, 3);
     });
   }
 })();

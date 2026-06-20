@@ -160,12 +160,13 @@ class OrderPaymentForm(forms.Form):
     )
     cvv = forms.CharField(
         label='Güvenlik Kodu (CVV)',
-        max_length=4,
+        max_length=3,
         widget=forms.TextInput(attrs={
             'class': 'form-control form-control-lg',
             'placeholder': '•••',
             'autocomplete': 'cc-csc',
             'inputmode': 'numeric',
+            'maxlength': '3',
         }),
     )
 
@@ -184,8 +185,8 @@ class OrderPaymentForm(forms.Form):
         if any(ch.isalpha() for ch in raw):
             raise forms.ValidationError('Kart numarası harf içeremez.')
         digits = re.sub(r'\D', '', raw)
-        if len(digits) < 13 or len(digits) > 19:
-            raise forms.ValidationError('Geçerli bir kart numarası girin (13–19 rakam).')
+        if len(digits) != 16:
+            raise forms.ValidationError('Kart numarası tam 16 haneli olmalıdır.')
         return raw
 
     def clean_expiry(self):
@@ -209,6 +210,6 @@ class OrderPaymentForm(forms.Form):
         if any(ch.isalpha() for ch in raw_input):
             raise forms.ValidationError('Güvenlik kodu harf içeremez.')
         raw = re.sub(r'\D', '', raw_input)
-        if len(raw) not in (3, 4):
-            raise forms.ValidationError('CVV 3 veya 4 haneli olmalıdır.')
+        if len(raw) != 3:
+            raise forms.ValidationError('Güvenlik kodu tam 3 haneli olmalıdır.')
         return raw
