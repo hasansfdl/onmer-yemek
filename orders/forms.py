@@ -173,27 +173,42 @@ class OrderPaymentForm(forms.Form):
         name = ' '.join(self.cleaned_data['card_holder'].split())
         if len(name) < 3:
             raise forms.ValidationError('Lütfen kart üzerindeki ismi girin.')
+        if re.search(r'\d', name):
+            raise forms.ValidationError('Kart üzerindeki isim rakam içeremez.')
         return name.upper()
 
     def clean_card_number(self):
-        # Formalite: gerçek doğrulama yok; boş bırakılmasın.
         raw = (self.cleaned_data.get('card_number') or '').strip()
         if not raw:
             raise forms.ValidationError('Kart numarası girin.')
+        if any(ch.isalpha() for ch in raw):
+            raise forms.ValidationError('Kart numarası harf içeremez.')
+        digits = re.sub(r'\D', '', raw)
+        if len(digits) < 13 or len(digits) > 19:
+            raise forms.ValidationError('Geçerli bir kart numarası girin (13–19 rakam).')
         return raw
 
     def clean_expiry(self):
         raw = re.sub(r'\D', '', self.cleaned_data.get('expiry', ''))
         if not re.fullmatch(r'\d{4}', raw):
             raise forms.ValidationError('Son kullanma AA/YY olarak 4 rakam girin (örn. 12 / 28).')
+        if any(ch.isalpha() for ch in self.cleaned_data.get('expiry', '')):
+            raise forms.ValidationError('Son kullanma tarihi harf içeremez.')
         mm = int(raw[:2])
         yy = int(raw[2:])
         if mm < 1 or mm > 12:
             raise forms.ValidationError('Ay 01–12 arasında olmalıdır.')
+        exp_year = 2000 + yy if yy < 100 else yy
+        today = date.today()
+        if (exp_year, mm) < (today.year, today.month):
+            raise forms.ValidationError('Kartın son kullanma tarihi geçmiş olamaz.')
         return raw
 
     def clean_cvv(self):
-        raw = re.sub(r'\D', '', self.cleaned_data.get('cvv', ''))
+        raw_input = self.cleaned_data.get('cvv', '')
+        if any(ch.isalpha() for ch in raw_input):
+            raise forms.ValidationError('Güvenlik kodu harf içeremez.')
+        raw = re.sub(r'\D', '', raw_input)
         if len(raw) not in (3, 4):
             raise forms.ValidationError('CVV 3 veya 4 haneli olmalıdır.')
         return raw

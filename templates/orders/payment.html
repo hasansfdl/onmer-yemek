@@ -104,8 +104,16 @@
 {% block extra_js %}
 <script>
 (function () {
+  var holder = document.querySelector('[name="card_holder"]');
   var num = document.querySelector('.js-card-number');
   var exp = document.querySelector('.js-card-expiry');
+  var cvv = document.querySelector('[name="cvv"]');
+
+  if (holder) {
+    holder.addEventListener('input', function () {
+      holder.value = holder.value.replace(/\d/g, '');
+    });
+  }
   if (num) {
     num.addEventListener('input', function () {
       var d = num.value.replace(/\D/g, '').slice(0, 19);
@@ -120,6 +128,11 @@
       } else {
         exp.value = d;
       }
+    });
+  }
+  if (cvv) {
+    cvv.addEventListener('input', function () {
+      cvv.value = cvv.value.replace(/\D/g, '').slice(0, 4);
     });
   }
 })();
