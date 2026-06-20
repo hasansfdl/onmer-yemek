@@ -87,6 +87,20 @@ class OrderForm(forms.ModelForm):
             raise forms.ValidationError('Etkinlik tarihi geçmiş olamaz.')
         return value
 
+    def clean_full_name(self):
+        value = self.cleaned_data['full_name'].strip()
+        if len(value) < 3:
+            raise forms.ValidationError('Lütfen geçerli bir ad soyad giriniz.')
+        if re.search(r'\d', value):
+            raise forms.ValidationError('Ad soyad alanında rakam kullanılamaz.')
+        return value
+
+    def clean_phone(self):
+        value = (self.cleaned_data.get('phone') or '').strip()
+        if any(ch.isalpha() for ch in value):
+            raise forms.ValidationError('Telefon numarası harf içeremez.')
+        return value
+
     # ---------- Dish selection (parsed from raw POST) ----------
 
     def clean(self):
