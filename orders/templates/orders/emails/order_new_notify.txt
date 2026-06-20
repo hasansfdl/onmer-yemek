@@ -1,0 +1,37 @@
+{{ company_name|upper }} — YENİ SİPARİŞ TALEBİ
+
+==================================================
+
+Sipariş no     : #ONMER-{{ order.id|stringformat:"05d" }}
+Ödeme durumu   : {{ order.get_payment_status_display }}
+
+Müşteri
+-------
+Ad Soyad       : {{ order.full_name }}
+{% if order.company %}Firma          : {{ order.company }}
+{% endif %}E-posta        : {{ order.email }}
+Telefon        : {{ order.phone }}
+
+Etkinlik
+--------
+Tür            : {{ order.get_organization_type_display }}
+Kişi sayısı    : {{ order.guest_count }}
+Tarih          : {{ order.event_date|date:"d.m.Y" }}
+{% if order.event_time %}Saat           : {{ order.event_time|time:"H:i" }}
+{% endif %}{% if order.event_address %}Adres          : {{ order.event_address }}
+{% endif %}
+
+Yemekler ve tutar
+-----------------
+{% for item in order_items %}- {{ item.dish.name }} — {{ item.quantity }} kişi × ₺{{ item.unit_price|floatformat:2 }} = ₺{{ item.line_total|floatformat:2 }}
+{% endfor %}
+Toplam (tahmini) : ₺{{ order_total|floatformat:2 }}
+
+{% if order.notes %}Notlar
+------
+{{ order.notes }}
+
+{% endif %}Yönetim panelinde aç:
+{{ admin_url }}
+
+Müşteriye yanıtlamak için: {{ order.email }}

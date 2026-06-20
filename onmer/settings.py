@@ -287,11 +287,14 @@ MESSAGE_TAGS = {
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '').strip()
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '').replace(' ', '')
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', '1') == '1'
 EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', '0') == '1'
 EMAIL_TIMEOUT = 15
+
+# Admin > Site ayarları e-postası yoksa bu adrese düşer (Render ortam değişkeni).
+NOTIFICATION_EMAIL = os.environ.get('NOTIFICATION_EMAIL', '').strip()
 
 if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

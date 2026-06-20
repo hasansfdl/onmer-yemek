@@ -14,7 +14,7 @@ from django.views.generic import CreateView, FormView, TemplateView
 from menu.models import Dish
 
 from .forms import OrderForm, OrderPaymentForm
-from .mail import notify_brand_order_paid
+from .mail import notify_brand_new_order, notify_brand_order_paid
 from .models import Order, OrderItem
 
 logger = logging.getLogger(__name__)
@@ -73,6 +73,14 @@ class OrderCreateView(CreateView):
         ]
         OrderItem.objects.bulk_create(items_to_create)
         order.recalculate_estimated_price()
+
+        try:
+            notify_brand_new_order(self.request, order)
+        except Exception:
+            logger.exception(
+                'Order new-notification mail failed for order #%s',
+                order.pk,
+            )
 
         self.request.session['pending_payment_order_id'] = order.pk
         messages.success(

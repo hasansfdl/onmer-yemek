@@ -40,6 +40,8 @@ def load_env_file(path: Path | None = None) -> None:
         if not key:
             continue
         value = _clean_env_value(value)
+        if key.upper() == 'EMAIL_HOST_PASSWORD':
+            value = value.replace(' ', '')
         os.environ[key] = value
         set_keys.append(key)
         if key.upper() == "USE_SQLITE":

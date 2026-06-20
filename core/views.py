@@ -2,14 +2,13 @@
 
 import logging
 
-from django.conf import settings
 from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.html import strip_tags
 from django.views.generic import CreateView, TemplateView
+
+from core.notifications import send_brand_mail
 
 from menu.models import Dish, MenuCategory
 from portfolio.models import PortfolioItem
@@ -111,17 +110,6 @@ class ContactView(CreateView):
         """Send the contact message to the e-mail saved on SiteSetting."""
 
         site = SiteSetting.load()
-        # Where to send to: prefer the editable SiteSetting.email; fall back
-        # to settings.SITE_EMAIL or DEFAULT_FROM_EMAIL.
-        recipient = (
-            site.email
-            or getattr(settings, 'SITE_EMAIL', None)
-            or settings.DEFAULT_FROM_EMAIL
-        )
-        if not recipient:
-            logger.warning('No contact recipient configured; skipping mail.')
-            return
-
         ctx = {
             'msg': message,
             'site': site,
@@ -133,19 +121,13 @@ class ContactView(CreateView):
         subject = (
             f'[{site.company_name}] Yeni iletişim mesajı: {message.subject}'
         )
-        text_body = render_to_string('core/emails/contact_message.txt', ctx)
-        html_body = render_to_string('core/emails/contact_message.html', ctx)
-
-        email = EmailMultiAlternatives(
+        send_brand_mail(
             subject=subject,
-            body=text_body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[recipient],
+            text_body=render_to_string('core/emails/contact_message.txt', ctx),
+            html_body=render_to_string('core/emails/contact_message.html', ctx),
             reply_to=[message.email],
         )
-        email.attach_alternative(html_body, 'text/html')
-        email.send(fail_silently=False)
-        logger.info('Contact message #%s delivered to %s', message.pk, recipient)
+        logger.info('Contact message #%s delivered', message.pk)
 
 
 def custom_404(request, exception):  # pragma: no cover - simple error page
