@@ -20,10 +20,13 @@ urlpatterns = [
     path('galeri/', include(('portfolio.urls', 'portfolio'), namespace='portfolio')),
 ]
 
-# Serve uploaded media + static during development.
+# Static: development only (production uses WhiteNoise + collectstatic).
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# User uploads: also serve in production when SERVE_MEDIA=1 (Render deploy bundle).
+if settings.DEBUG or getattr(settings, 'SERVE_MEDIA', False):
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Custom error handlers
 handler404 = 'core.views.custom_404'

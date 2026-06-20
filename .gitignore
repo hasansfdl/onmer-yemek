@@ -23,8 +23,8 @@ env/
 # Django
 db.sqlite3
 *.sqlite3
-media/
 staticfiles/
+# media/ — admin yüklemeleri Render deploy için repoda tutulur
 local_settings.py
 
 # Derleme / kurulum

@@ -72,9 +72,23 @@ _WRITABLE_DATA_DIR = _writable_data_dir()
 # ---------------------------------------------------------------------------
 # NOTE: For production, move SECRET_KEY to an environment variable and turn
 # DEBUG off. These defaults are for local development only.
-SECRET_KEY = 'django-insecure-onmer-yemek-organizasyon-dev-secret-CHANGE-ME'
-DEBUG = True
-ALLOWED_HOSTS = ['*']  # Open in development; tighten for production.
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-onmer-yemek-organizasyon-dev-secret-CHANGE-ME',
+)
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+
+_render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip()
+if _render_host:
+    ALLOWED_HOSTS = [_render_host, 'localhost', '127.0.0.1']
+else:
+    _allowed = os.environ.get('ALLOWED_HOSTS', '*').strip()
+    ALLOWED_HOSTS = ['*'] if _allowed == '*' else [
+        h.strip() for h in _allowed.split(',') if h.strip()
+    ]
+
+# Render gibi ortamlarda admin yüklemeleri repo ile deploy edilir; /media/ servis edilir.
+SERVE_MEDIA = os.environ.get('SERVE_MEDIA', '1') == '1'
 
 
 # ---------------------------------------------------------------------------
@@ -225,7 +239,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = _WRITABLE_DATA_DIR / 'media' if _shipped_desktop_install() else BASE_DIR / 'media'
 
 
