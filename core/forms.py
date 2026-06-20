@@ -1,5 +1,7 @@
 """Forms for the core app (contact form)."""
 
+import re
+
 from django import forms
 
 from .models import ContactMessage
@@ -39,4 +41,14 @@ class ContactForm(forms.ModelForm):
         value = self.cleaned_data['full_name'].strip()
         if len(value) < 3:
             raise forms.ValidationError('Lütfen geçerli bir ad soyad giriniz.')
+        if re.search(r'\d', value):
+            raise forms.ValidationError('Ad soyad alanında rakam kullanılamaz.')
+        return value
+
+    def clean_phone(self):
+        value = (self.cleaned_data.get('phone') or '').strip()
+        if not value:
+            return value
+        if any(ch.isalpha() for ch in value):
+            raise forms.ValidationError('Telefon numarası harf içeremez.')
         return value
