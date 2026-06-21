@@ -40,7 +40,7 @@ class OrderForm(forms.ModelForm):
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': '',
+                'placeholder': 'örnek@gmail.com',
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control form-control-lg js-phone-national',
