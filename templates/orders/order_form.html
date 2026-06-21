@@ -20,12 +20,7 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-4" data-aos="fade-right">
-                <h2 class="section-title">Etkinliğinize <span class="accent">Özel</span> Teklif</h2>
-                <p class="section-lead">
-                    Detayları paylaşın, deneyimli ekibimiz size özel bir menü ve teklif
-                    hazırlasın. Tüm taleplerimize 24 saat içinde dönüş yapıyoruz.
-                </p>
-                <ul class="list-unstyled mt-4">
+                <ul class="list-unstyled mt-2">
                     <li class="d-flex gap-2 mb-3">
                         <i class="bi bi-check-circle-fill text-gold fs-5 mt-1"></i>
                         <div>
@@ -57,7 +52,10 @@
 
             <div class="col-lg-8" data-aos="fade-left">
                 <div class="form-card">
-                    <h3 class="mb-4">Sipariş Formu</h3>
+                    <h3 class="mb-2">Sipariş Formu</h3>
+                    <p class="text-light-50 small mb-4">
+                        <span class="text-gold">*</span> işaretiyle gösterilen alanları doldurmak zorunludur.
+                    </p>
                     <form method="post" novalidate id="orderForm">
                         {% csrf_token %}
 
@@ -86,7 +84,10 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Telefon *</label>
-                                {{ form.phone }}
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">+90</span>
+                                    {{ form.phone }}
+                                </div>
                                 {{ form.phone.errors }}
                             </div>
 
@@ -113,7 +114,7 @@
                                 {{ form.event_time.errors }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Etkinlik Adresi</label>
+                                <label class="form-label">Etkinlik Adresi *</label>
                                 {{ form.event_address }}
                                 {{ form.event_address.errors }}
                             </div>
@@ -265,6 +266,15 @@
     });
 
     recalcTotal();
+})();
+
+(function () {
+    const phone = document.querySelector('.js-phone-national');
+    if (phone) {
+        phone.addEventListener('input', function () {
+            phone.value = phone.value.replace(/\D/g, '').slice(0, 10);
+        });
+    }
 })();
 </script>
 {% endblock %}

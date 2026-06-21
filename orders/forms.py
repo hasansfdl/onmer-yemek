@@ -40,11 +40,14 @@ class OrderForm(forms.ModelForm):
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'ornek@firma.com',
+                'placeholder': '',
             }),
             'phone': forms.TextInput(attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': '+90 555 123 45 67',
+                'class': 'form-control form-control-lg js-phone-national',
+                'placeholder': '',
+                'inputmode': 'numeric',
+                'maxlength': '10',
+                'autocomplete': 'tel-national',
             }),
             'organization_type': forms.Select(attrs={
                 'class': 'form-select form-select-lg',
@@ -73,6 +76,19 @@ class OrderForm(forms.ModelForm):
             }),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['event_address'].required = True
+        self.fields['event_address'].error_messages = {
+            'required': 'Etkinlik adresi zorunludur.',
+        }
+        if not self.is_bound and self.instance.pk and self.instance.phone:
+            digits = re.sub(r'\D', '', self.instance.phone)
+            if digits.startswith('90') and len(digits) > 10:
+                digits = digits[2:]
+            if len(digits) >= 10:
+                self.initial['phone'] = digits[-10:]
+
     def clean_guest_count(self):
         value = self.cleaned_data['guest_count']
         if value < 10:
@@ -99,6 +115,19 @@ class OrderForm(forms.ModelForm):
         value = (self.cleaned_data.get('phone') or '').strip()
         if any(ch.isalpha() for ch in value):
             raise forms.ValidationError('Telefon numarası harf içeremez.')
+        digits = re.sub(r'\D', '', value)
+        if digits.startswith('90') and len(digits) > 10:
+            digits = digits[2:]
+        if len(digits) != 10:
+            raise forms.ValidationError(
+                'Telefon numarası +90 sonrası tam 10 hane olmalıdır.'
+            )
+        return f'+90{digits}'
+
+    def clean_event_address(self):
+        value = (self.cleaned_data.get('event_address') or '').strip()
+        if not value:
+            raise forms.ValidationError('Etkinlik adresi zorunludur.')
         return value
 
     # ---------- Dish selection (parsed from raw POST) ----------
