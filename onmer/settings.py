@@ -6,7 +6,6 @@ Premium catering company website backed by Django 6 and Bootstrap 5.
 
 from pathlib import Path
 import os
-import sys
 
 try:
     from load_env import bootstrap as _load_project_env
@@ -15,56 +14,7 @@ try:
 except ImportError:
     pass
 
-
-def _frozen_app() -> bool:
-    return getattr(sys, "frozen", False)
-
-
-def _base_dir() -> Path:
-    """Proje kökü: geliştirmede repo; PyInstaller'da exe ile aynı klasör (templates/static)."""
-    if _frozen_app():
-        return Path(sys.executable).resolve().parent
-    return Path(__file__).resolve().parent.parent
-
-
-BASE_DIR = _base_dir()
-
-
-def _shipped_desktop_install() -> bool:
-    """
-    Inno ile kurulmuş masaüstü paketi: .exe ile aynı kökte manage.py vardır.
-    Bu durumda SQLite Program Files yerine kullanıcı veri klasöründe tutulur;
-    manage.py çalıştırıldığında da aynı yol kullanılsın diye burada tespit edilir.
-    """
-    if _frozen_app():
-        return True
-    try:
-        return sys.platform == "win32" and (BASE_DIR / "OnmerAdminPanel.exe").exists()
-    except OSError:
-        return False
-
-
-def _writable_data_dir() -> Path:
-    """
-    .exe kurulumunda Program Files altında SQLite/media yazmak çoğu kullanıcıda başarısız olur.
-    Veri dosyaları OS'a uygun kullanıcı klasöründe tutulur.
-    """
-    if not _shipped_desktop_install():
-        return BASE_DIR
-    if sys.platform == "win32":
-        local = os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
-        d = Path(local) / "Onmer" / "AdminPanel"
-    else:
-        d = Path.home() / ".local" / "share" / "Onmer" / "AdminPanel"
-    d.mkdir(parents=True, exist_ok=True)
-    (d / "media").mkdir(parents=True, exist_ok=True)
-    return d
-
-
-# ---------------------------------------------------------------------------
-# Base paths
-# ---------------------------------------------------------------------------
-_WRITABLE_DATA_DIR = _writable_data_dir()
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # ---------------------------------------------------------------------------
@@ -178,15 +128,10 @@ TEMPLATES = [
 USE_SQLITE = os.environ.get('USE_SQLITE', '').lower() in ('1', 'true', 'yes')
 
 if USE_SQLITE:
-    _sqlite_file = (
-        _WRITABLE_DATA_DIR / "db.sqlite3"
-        if _shipped_desktop_install()
-        else BASE_DIR / "db.sqlite3"
-    )
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': _sqlite_file,
+            'NAME': BASE_DIR / 'db.sqlite3',
             'OPTIONS': {
                 'timeout': 20,
             },
@@ -240,7 +185,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = _WRITABLE_DATA_DIR / 'media' if _shipped_desktop_install() else BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # ---------------------------------------------------------------------------

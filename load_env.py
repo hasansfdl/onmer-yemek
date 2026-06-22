@@ -9,10 +9,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 
 def _env_file_path() -> Path:
-    import sys
-
-    if getattr(sys, "frozen", False):
-        return Path(sys.executable).resolve().parent / "onmer_database.env"
     return PROJECT_ROOT / "onmer_database.env"
 
 

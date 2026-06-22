@@ -1,1 +1,0 @@
-# Onmer Admin Panel paketi
