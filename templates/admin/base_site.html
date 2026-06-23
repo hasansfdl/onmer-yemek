@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    #recent-actions-module,
+    #content-related {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

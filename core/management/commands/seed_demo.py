@@ -40,8 +40,8 @@ class Command(BaseCommand):
 
         # ----- Services -----
         services = [
-            ('Düğün Organizasyonları', 'Hayalinizdeki düğün için özenle hazırlanmış zarif menüler ve kusursuz sunum.', 'bi-heart-fill'),
-            ('Nişan & Söz Yemeği', 'Aileler için sade, lezzet dolu ve şık nişan menüleri.', 'bi-suit-heart'),
+            ('Düğün Organizasyonları', 'Hayalinizdeki düğün için özenle hazırlanmış zarif menüler ve kusursuz sunum.', 'bi-calendar-event'),
+            ('Nişan & Söz Yemeği', 'Aileler için sade, lezzet dolu ve şık nişan menüleri.', 'bi-gem'),
             ('Kurumsal Catering', 'Açılış kokteylleri, iş yemekleri ve özel kurumsal davetler.', 'bi-building-fill'),
             ('Toplu Yemek Servisi', 'Fabrika, ofis ve okullar için hijyenik, lezzetli toplu yemek.', 'bi-people-fill'),
             ('Catering Hizmeti', 'Etkinliğinize özel mobil mutfak ve catering ekibi.', 'bi-truck'),
@@ -54,8 +54,8 @@ class Command(BaseCommand):
 
         # ----- Categories -----
         category_specs = [
-            ('Düğün', 'wedding', 'bi-heart-fill', 1),
-            ('Nişan', 'engagement', 'bi-suit-heart', 2),
+            ('Düğün', 'wedding', 'bi-calendar-event', 1),
+            ('Nişan', 'engagement', 'bi-gem', 2),
             ('Şirket Organizasyonu', 'corporate', 'bi-building', 3),
             ('Toplu Yemek', 'bulk', 'bi-people-fill', 4),
             ('Catering', 'catering', 'bi-truck', 5),

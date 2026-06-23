@@ -41,8 +41,9 @@ class SiteSettingAdmin(admin.ModelAdmin):
 
 @admin.register(Statistic)
 class StatisticAdmin(admin.ModelAdmin):
-    list_display = ('label', 'value', 'suffix', 'icon', 'order')
+    list_display = ('label', 'value', 'suffix', 'order')
     list_editable = ('value', 'suffix', 'order')
+    fields = ('label', 'value', 'suffix', 'order')
     ordering = ('order',)
     change_list_template = 'admin/core/statistic/change_list.html'
 
