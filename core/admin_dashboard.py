@@ -16,7 +16,10 @@ def patch_admin_index() -> None:
     @wraps(original_index)
     def index_with_orders(request, extra_context=None):
         from orders.models import Order
+        from orders.profit import aggregate_profit_stats
 
+        active_orders = Order.objects.exclude(status='cancelled')
+        profit_summary = aggregate_profit_stats(active_orders)
         context = {
             'orders_stats': {
                 'new': Order.objects.filter(status='new').count(),
@@ -24,6 +27,7 @@ def patch_admin_index() -> None:
                 'pending_payment': Order.objects.filter(
                     payment_status='pending',
                 ).count(),
+                'total_profit': profit_summary['profit'],
             },
             'recent_orders': (
                 Order.objects.order_by('-created_at')

@@ -1,0 +1,15 @@
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+
+{% block content_title %}
+    {{ block.super }}
+    {% if order_list_profit_summary %}
+        <p class="help" style="margin-top: 0.5rem;">
+            Özet (iptal hariç) —
+            Ciro: <strong>₺{{ order_list_profit_summary.revenue|floatformat:2|intcomma }}</strong> ·
+            Maliyet: ₺{{ order_list_profit_summary.cost|floatformat:2|intcomma }} ·
+            Kar: <strong>₺{{ order_list_profit_summary.profit|floatformat:2|intcomma }}</strong> ·
+            Marj: %{{ order_list_profit_summary.margin_percent }}
+        </p>
+    {% endif %}
+{% endblock %}

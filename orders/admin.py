@@ -24,17 +24,24 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'full_name', 'organization_type', 'guest_count',
-                    'item_count', 'estimated_price_display',
-                    'payment_status', 'event_date', 'status', 'created_at')
+    list_display = (
+        'id', 'full_name', 'organization_type', 'guest_count',
+        'item_count', 'estimated_price_display', 'cost_display',
+        'profit_display', 'margin_display',
+        'payment_status', 'event_date', 'status', 'created_at',
+    )
     list_display_links = ('id', 'full_name')
     list_filter = ('status', 'payment_status', 'organization_type', 'event_date')
     search_fields = ('full_name', 'email', 'phone', 'company', 'notes',
                      'payment_transaction_ref')
     list_editable = ('status',)
     date_hierarchy = 'event_date'
-    readonly_fields = ('created_at', 'updated_at',
-                       'items_total_display')
+    change_list_template = 'admin/orders/order/change_list.html'
+    readonly_fields = (
+        'created_at', 'updated_at', 'items_total_display',
+        'profit_summary_display', 'cost_summary_display',
+        'margin_summary_display',
+    )
 
     inlines = [OrderItemInline]
 
@@ -54,8 +61,12 @@ class OrderAdmin(admin.ModelAdmin):
                        'payment_completed_at'),
         }),
         ('İşlem', {
-            'fields': ('status', 'estimated_price', 'items_total_display',
-                       'created_at', 'updated_at'),
+            'fields': (
+                'status', 'estimated_price', 'items_total_display',
+                'cost_summary_display', 'profit_summary_display',
+                'margin_summary_display',
+                'created_at', 'updated_at',
+            ),
         }),
     )
 
@@ -71,6 +82,36 @@ class OrderAdmin(admin.ModelAdmin):
             return format_html('<strong>₺{}</strong>',
                                f'{obj.estimated_price:,.2f}')
         return '—'
+
+    @admin.display(description='Maliyet')
+    def cost_display(self, obj):
+        if obj.revenue_amount:
+            return f'₺{obj.cost_amount:,.2f}'
+        return '—'
+
+    @admin.display(description='Kar')
+    def profit_display(self, obj):
+        if obj.revenue_amount:
+            return format_html('<strong>₺{}</strong>', f'{obj.profit_amount:,.2f}')
+        return '—'
+
+    @admin.display(description='Kar Oranı')
+    def margin_display(self, obj):
+        if obj.revenue_amount:
+            return f'%{obj.profit_margin_percent}'
+        return '—'
+
+    @admin.display(description='Maliyet (₺)')
+    def cost_summary_display(self, obj):
+        return f'₺{obj.cost_amount:,.2f}'
+
+    @admin.display(description='Kar (₺)')
+    def profit_summary_display(self, obj):
+        return f'₺{obj.profit_amount:,.2f}'
+
+    @admin.display(description='Kar Oranı')
+    def margin_summary_display(self, obj):
+        return f'%{obj.profit_margin_percent} (ciro üzerinden)'
 
     @admin.display(description='Satırlardan Hesaplanan Toplam (₺)')
     def items_total_display(self, obj):
@@ -90,6 +131,16 @@ class OrderAdmin(admin.ModelAdmin):
         """After inline OrderItem rows are saved, refresh estimated_price."""
         super().save_related(request, form, formsets, change)
         form.instance.recalculate_estimated_price()
+
+    def changelist_view(self, request, extra_context=None):
+        from orders.profit import aggregate_profit_stats
+
+        qs = self.get_queryset(request).exclude(status='cancelled')
+        extra_context = {
+            **(extra_context or {}),
+            'order_list_profit_summary': aggregate_profit_stats(qs),
+        }
+        return super().changelist_view(request, extra_context=extra_context)
 
     def has_add_permission(self, request):
         """Siparişler yalnızca web sitesi formundan oluşturulur."""

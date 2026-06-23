@@ -17,6 +17,8 @@
                 <th scope="col">Kişi</th>
                 <th scope="col">Etkinlik</th>
                 <th scope="col">Tahmini tutar</th>
+                <th scope="col">Kar</th>
+                <th scope="col">Kar oranı</th>
                 <th scope="col">Ödeme</th>
                 <th scope="col">Durum</th>
                 <th scope="col">Tarih</th>
@@ -47,6 +49,14 @@
                                 —
                             {% endif %}
                         </td>
+                        <td>
+                            {% if order.revenue_amount %}
+                                ₺{{ order.profit_amount|floatformat:2|intcomma }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>%{{ order.profit_margin_percent }}</td>
                         <td>{{ order.get_payment_status_display }}</td>
                         <td>{{ order.get_status_display }}</td>
                         <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
@@ -54,7 +64,7 @@
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="9">
+                    <td colspan="11">
                         Henüz web sitesinden sipariş yok.
                         <a href="{% url 'orders:create' %}">Sipariş formunu</a> test edebilirsiniz.
                     </td>
@@ -65,7 +75,8 @@
     <p class="help" style="padding: 8px 12px; margin: 0;">
         Yeni: <strong>{{ orders_stats.new }}</strong> ·
         Ödeme bekleyen: <strong>{{ orders_stats.pending_payment }}</strong> ·
-        Toplam: <strong>{{ orders_stats.total }}</strong>
+        Toplam: <strong>{{ orders_stats.total }}</strong> ·
+        Kar (iptal hariç, %45): <strong>₺{{ orders_stats.total_profit|floatformat:2|intcomma }}</strong>
         —
         <a href="{% url orders_changelist_url %}">Tüm siparişleri görüntüle</a>
     </p>

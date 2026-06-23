@@ -43,6 +43,20 @@ class StatisticAdmin(admin.ModelAdmin):
     list_display = ('label', 'value', 'suffix', 'icon', 'order')
     list_editable = ('value', 'suffix', 'order')
     ordering = ('order',)
+    change_list_template = 'admin/core/statistic/change_list.html'
+
+    def changelist_view(self, request, extra_context=None):
+        from orders.models import Order
+        from orders.profit import aggregate_profit_stats
+
+        active_orders = Order.objects.exclude(status='cancelled')
+        all_orders = Order.objects.order_by('-created_at')
+        extra_context = {
+            **(extra_context or {}),
+            'order_profit_summary': aggregate_profit_stats(active_orders),
+            'order_profit_rows': all_orders,
+        }
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 @admin.register(ContactMessage)

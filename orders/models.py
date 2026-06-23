@@ -5,6 +5,13 @@ from decimal import Decimal
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .profit import (
+    PROFIT_MARGIN_PERCENT,
+    cost_for_order,
+    profit_for_order,
+    revenue_for_order,
+)
+
 
 class Order(models.Model):
     """A request submitted via the public bulk-order form."""
@@ -104,6 +111,22 @@ class Order(models.Model):
         if save:
             self.save(update_fields=['estimated_price', 'updated_at'])
         return total
+
+    @property
+    def revenue_amount(self) -> Decimal:
+        return revenue_for_order(self)
+
+    @property
+    def profit_amount(self) -> Decimal:
+        return profit_for_order(self)
+
+    @property
+    def cost_amount(self) -> Decimal:
+        return cost_for_order(self)
+
+    @property
+    def profit_margin_percent(self) -> int:
+        return PROFIT_MARGIN_PERCENT
 
 
 class OrderItem(models.Model):

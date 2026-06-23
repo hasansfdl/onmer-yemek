@@ -1,0 +1,87 @@
+{% extends "admin/change_list.html" %}
+{% load i18n humanize %}
+
+{% block content_title %}
+    <h1>Sipariş Kar / Zarar İstatistikleri</h1>
+    <p class="help">
+        Kar marjı sabit <strong>%{{ order_profit_summary.margin_percent }}</strong> olarak hesaplanır
+        (Kar = Ciro × %{{ order_profit_summary.margin_percent }}, Maliyet = Ciro − Kar).
+        İptal edilen siparişler özet dışındadır.
+    </p>
+{% endblock %}
+
+{% block result_list %}
+<div class="module" id="onmer-order-profit-stats">
+    <h2>Özet</h2>
+    <table style="margin-bottom: 1.5rem;">
+        <tbody>
+            <tr>
+                <th scope="row">Sipariş sayısı</th>
+                <td><strong>{{ order_profit_summary.order_count }}</strong></td>
+            </tr>
+            <tr>
+                <th scope="row">Toplam ciro</th>
+                <td><strong>₺{{ order_profit_summary.revenue|floatformat:2|intcomma }}</strong></td>
+            </tr>
+            <tr>
+                <th scope="row">Toplam maliyet</th>
+                <td>₺{{ order_profit_summary.cost|floatformat:2|intcomma }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Toplam kar</th>
+                <td><strong style="color: #0a7a2f;">₺{{ order_profit_summary.profit|floatformat:2|intcomma }}</strong></td>
+            </tr>
+            <tr>
+                <th scope="row">Kar marjı</th>
+                <td>%{{ order_profit_summary.margin_percent }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Sipariş bazında</h2>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Müşteri</th>
+                <th scope="col">Durum</th>
+                <th scope="col">Ciro</th>
+                <th scope="col">Maliyet</th>
+                <th scope="col">Kar</th>
+                <th scope="col">Kar oranı</th>
+                <th scope="col">Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if order_profit_rows %}
+                {% for order in order_profit_rows %}
+                    <tr{% if order.status == 'cancelled' %} style="opacity: 0.65;"{% endif %}>
+                        <th scope="row">
+                            <a href="{% url 'admin:orders_order_change' order.pk %}">#{{ order.pk }}</a>
+                        </th>
+                        <td>{{ order.full_name }}</td>
+                        <td>{{ order.get_status_display }}</td>
+                        <td>₺{{ order.revenue_amount|floatformat:2|intcomma }}</td>
+                        <td>₺{{ order.cost_amount|floatformat:2|intcomma }}</td>
+                        <td><strong>₺{{ order.profit_amount|floatformat:2|intcomma }}</strong></td>
+                        <td>%{{ order.profit_margin_percent }}</td>
+                        <td>{{ order.created_at|date:"d.m.Y" }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="8">Henüz sipariş yok.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <p class="help" style="padding: 8px 12px; margin: 0;">
+        <a href="{% url 'admin:orders_order_changelist' %}">Tüm siparişleri yönet</a>
+    </p>
+</div>
+
+<div class="module">
+    <h2>Ana sayfa istatistik kartları</h2>
+</div>
+{{ block.super }}
+{% endblock %}
