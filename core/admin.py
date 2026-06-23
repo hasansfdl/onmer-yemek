@@ -4,7 +4,6 @@ from django.contrib import admin
 
 from .models import (
     ContactMessage,
-    Service,
     SiteSetting,
     Statistic,
 )
@@ -44,14 +43,6 @@ class StatisticAdmin(admin.ModelAdmin):
     list_display = ('label', 'value', 'suffix', 'icon', 'order')
     list_editable = ('value', 'suffix', 'order')
     ordering = ('order',)
-
-
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'icon', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
-    list_filter = ('is_active',)
-    search_fields = ('title', 'short_description')
 
 
 @admin.register(ContactMessage)
