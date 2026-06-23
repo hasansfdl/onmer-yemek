@@ -58,6 +58,9 @@ class StatisticAdmin(admin.ModelAdmin):
         }
         return super().changelist_view(request, extra_context=extra_context)
 
+    def has_add_permission(self, request):
+        return False
+
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
