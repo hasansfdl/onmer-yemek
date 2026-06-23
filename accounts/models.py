@@ -23,4 +23,7 @@ class Profile(models.Model):
         verbose_name_plural = _('Profiller')
 
     def __str__(self) -> str:
-        return f'Profil: {self.user.username}'
+        label = self.user.get_full_name() or self.user.username
+        if self.user.email:
+            return f'{label} ({self.user.email})'
+        return label

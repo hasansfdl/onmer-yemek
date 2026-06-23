@@ -3,16 +3,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Dish, MenuCategory
-
-
-@admin.register(MenuCategory)
-class MenuCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'kind', 'icon', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
-    list_filter = ('kind', 'is_active')
-    search_fields = ('name',)
-    prepopulated_fields = {'slug': ('name',)}
+from .models import Dish
 
 
 @admin.register(Dish)

@@ -7,3 +7,6 @@ class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'accounts'
     verbose_name = 'Kullanıcı Hesapları'
+
+    def ready(self):
+        from . import signals  # noqa: F401
