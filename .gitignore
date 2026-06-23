@@ -27,15 +27,12 @@ staticfiles/
 # media/ — admin yüklemeleri Render deploy için repoda tutulur
 local_settings.py
 
-# Masaüstü uygulama yerel veritabanı
+# Derleme / kurulum (masaüstü uygulama — yalnızca yerelde)
+onmer_stok_desktop/
+packaging/
 data/
-
-# Derleme / kurulum
 dist/
 build/
-packaging/seed_data/
-packaging/_setup_payload/
-packaging/_setup.sed
 *.spec.bak
 *.exe
 
