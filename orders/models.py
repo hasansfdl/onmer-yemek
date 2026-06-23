@@ -78,8 +78,8 @@ class Order(models.Model):
     updated_at = models.DateTimeField(_('Güncelleme'), auto_now=True)
 
     class Meta:
-        verbose_name = _('Sipariş Talebi')
-        verbose_name_plural = _('Sipariş Talepleri')
+        verbose_name = _('Sipariş')
+        verbose_name_plural = _('Siparişler')
         ordering = ['-created_at']
 
     def __str__(self) -> str:

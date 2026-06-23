@@ -1,0 +1,75 @@
+{% extends "admin/index.html" %}
+{% load i18n humanize %}
+
+{% block content %}
+<div class="module" id="onmer-orders-dashboard">
+    <table>
+        <caption>
+            <a href="{% url orders_changelist_url %}" class="section">
+                Siparişler
+            </a>
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Müşteri</th>
+                <th scope="col">Organizasyon</th>
+                <th scope="col">Kişi</th>
+                <th scope="col">Etkinlik</th>
+                <th scope="col">Tahmini tutar</th>
+                <th scope="col">Ödeme</th>
+                <th scope="col">Durum</th>
+                <th scope="col">Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_orders %}
+                {% for order in recent_orders %}
+                    <tr>
+                        <th scope="row">
+                            <a href="{% url 'admin:orders_order_change' order.pk %}">
+                                #{{ order.pk }}
+                            </a>
+                        </th>
+                        <td>
+                            <strong>{{ order.full_name }}</strong>
+                            {% if order.company %}
+                                <br><span class="quiet">{{ order.company }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.get_organization_type_display }}</td>
+                        <td>{{ order.guest_count }}</td>
+                        <td>{{ order.event_date|date:"d.m.Y" }}</td>
+                        <td>
+                            {% if order.estimated_price %}
+                                ₺{{ order.estimated_price|floatformat:2|intcomma }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>{{ order.get_payment_status_display }}</td>
+                        <td>{{ order.get_status_display }}</td>
+                        <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="9">
+                        Henüz web sitesinden sipariş yok.
+                        <a href="{% url 'orders:create' %}">Sipariş formunu</a> test edebilirsiniz.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <p class="help" style="padding: 8px 12px; margin: 0;">
+        Yeni: <strong>{{ orders_stats.new }}</strong> ·
+        Ödeme bekleyen: <strong>{{ orders_stats.pending_payment }}</strong> ·
+        Toplam: <strong>{{ orders_stats.total }}</strong>
+        —
+        <a href="{% url orders_changelist_url %}">Tüm siparişleri görüntüle</a>
+    </p>
+</div>
+
+{{ block.super }}
+{% endblock %}

@@ -169,8 +169,18 @@ a:hover { color: #fff; }
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: background var(--tr), padding var(--tr), box-shadow var(--tr);
-    padding: 18px 0;
+    padding: 14px 0;
     border-bottom: 1px solid transparent;
+}
+.onmer-navbar-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.onmer-brand-link {
+    margin-right: 0;
+    padding: 0;
+    flex-shrink: 0;
 }
 .onmer-navbar.scrolled {
     background: rgba(6, 10, 20, 0.96);
@@ -185,9 +195,14 @@ a:hover { color: #fff; }
     width: auto;
     max-width: 220px;
     object-fit: contain;
+    object-position: left center;
+    display: block;
     transition: transform var(--tr), filter var(--tr);
-    /* Subtle glow so the blue mark pops on the dark navbar */
     filter: drop-shadow(0 2px 8px rgba(var(--c-brand-rgb), 0.25));
+}
+.brand-logo-navbar {
+    /* Siyah zeminli logo dosyasında mavi işaretin koyu menüde görünmesi */
+    mix-blend-mode: screen;
 }
 .navbar-brand:hover .brand-logo {
     transform: scale(1.04);

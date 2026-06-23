@@ -27,6 +27,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'full_name', 'organization_type', 'guest_count',
                     'item_count', 'estimated_price_display',
                     'payment_status', 'event_date', 'status', 'created_at')
+    list_display_links = ('id', 'full_name')
     list_filter = ('status', 'payment_status', 'organization_type', 'event_date')
     search_fields = ('full_name', 'email', 'phone', 'company', 'notes',
                      'payment_transaction_ref')
@@ -89,3 +90,7 @@ class OrderAdmin(admin.ModelAdmin):
         """After inline OrderItem rows are saved, refresh estimated_price."""
         super().save_related(request, form, formsets, change)
         form.instance.recalculate_estimated_price()
+
+    def has_add_permission(self, request):
+        """Siparişler yalnızca web sitesi formundan oluşturulur."""
+        return False

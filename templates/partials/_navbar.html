@@ -1,13 +1,12 @@
 {% load static %}
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark fixed-top onmer-navbar">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'core:home' %}">
+    <div class="container-fluid onmer-navbar-inner px-3 px-lg-4">
+        <a class="navbar-brand onmer-brand-link" href="{% url 'core:home' %}" aria-label="{{ company_name }} ana sayfa">
             <img src="{% static 'images/onmer-logo-transparent.png' %}" alt="{{ company_name }}"
-                 class="brand-logo" width="180" height="60">
-            <span class="brand-tag d-none d-md-inline-block ms-2">YEMEK ORGANİZASYON</span>
+                 class="brand-logo brand-logo-navbar" width="200" height="64" fetchpriority="high">
         </a>
 
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+        <button class="navbar-toggler border-0 ms-auto" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarMain" aria-controls="navbarMain"
                 aria-expanded="false" aria-label="Menüyü aç/kapa">
             <span class="navbar-toggler-icon"></span>
@@ -33,6 +32,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
                             {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'admin:orders_order_changelist' %}">
+                                    <i class="bi bi-bag-check me-2"></i>Siparişler
+                                </a></li>
                                 <li><a class="dropdown-item" href="{% url 'admin:index' %}">
                                     <i class="bi bi-gear me-2"></i>Yönetim Paneli
                                 </a></li>
