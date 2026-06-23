@@ -1,6 +1,7 @@
 """Admin customisations for site-wide content models."""
 
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import (
     ContactMessage,
@@ -68,10 +69,12 @@ class ContactMessageAdmin(admin.ModelAdmin):
         'full_name',
         'email',
         'subject',
+        'message_preview',
         'is_read',
         'replied_at',
         'created_at',
     )
+    list_display_links = ('full_name', 'subject')
     list_filter = ('is_read', 'created_at', 'replied_at')
     search_fields = ('full_name', 'email', 'subject', 'message', 'reply_text')
     readonly_fields = (
@@ -79,25 +82,47 @@ class ContactMessageAdmin(admin.ModelAdmin):
         'email',
         'phone',
         'subject',
-        'message',
+        'message_display',
         'created_at',
         'replied_at',
         'replied_by',
     )
-    fields = (
-        'full_name',
-        'email',
-        'phone',
-        'subject',
-        'message',
-        'is_read',
-        'reply_text',
-        'replied_at',
-        'replied_by',
-        'created_at',
+    fieldsets = (
+        ('Gönderen', {
+            'fields': ('full_name', 'email', 'phone', 'created_at'),
+        }),
+        ('Mesaj', {
+            'fields': ('subject', 'message_display'),
+            'description': 'Mesajın tam metni aşağıdadır.',
+        }),
+        ('Yanıt ve durum', {
+            'fields': ('is_read', 'reply_text', 'replied_at', 'replied_by'),
+        }),
     )
     list_editable = ('is_read',)
     date_hierarchy = 'created_at'
+
+    @admin.display(description='Mesaj özeti')
+    def message_preview(self, obj):
+        text = (obj.message or '').strip()
+        if not text:
+            return '—'
+        preview = text.replace('\n', ' ')
+        if len(preview) > 100:
+            preview = f'{preview[:100]}…'
+        return preview
+
+    @admin.display(description='Mesaj içeriği')
+    def message_display(self, obj):
+        text = (obj.message or '').strip()
+        if not text:
+            return '—'
+        return format_html(
+            '<div style="white-space: pre-wrap; line-height: 1.5; max-width: 760px; '
+            'padding: 14px 16px; background: #f8f9fa; border: 1px solid #ced4da; '
+            'border-radius: 8px; font-size: 14px;">{}</div>',
+            text,
+        )
 
     def has_add_permission(self, request):
         return False
